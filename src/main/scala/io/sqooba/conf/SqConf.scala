@@ -28,5 +28,5 @@ class SqConf(fileName: String = "application.conf") {
     }
   }
 
-  def keyAsEnv(key: String): String = key.toUpperCase.replaceAll("""\.""", "_"),
+  def keyAsEnv(key: String): String = key.toUpperCase.replaceAll("""\.""", "_")
 }
