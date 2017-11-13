@@ -5,8 +5,11 @@ import scala.util.Properties
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
+import com.typesafe.scalalogging.Logger
 
 class SqConf(fileName: String = "application.conf") {
+
+  val logger = Logger(this.getClass)
 
   val conf: Config = {
     ConfigFactory.load(fileName)
@@ -28,5 +31,9 @@ class SqConf(fileName: String = "application.conf") {
     }
   }
 
-  def keyAsEnv(key: String): String = key.toUpperCase.replaceAll("""\.""", "_")
+  def keyAsEnv(key: String): String = {
+    val asEnvKey = key.toUpperCase.replaceAll("""\.""", "_")
+    logger.debug(s"PropertyKey: '$key' is as envKey: '$asEnvKey'")
+    asEnvKey
+  }
 }

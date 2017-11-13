@@ -1,12 +1,14 @@
 organization := "io.sqooba"
 scalaVersion := "2.12.4"
-version      := "0.1.0"
+version      := "0.1.1"
 name         := "sq-conf"
 
 crossScalaVersions := Seq("2.12.4", "2.11.11")
 
 libraryDependencies ++= Seq(
   "com.typesafe"                %   "config"                  % "1.3.1",
+  "com.typesafe.scala-logging"  %%  "scala-logging"           % "3.7.2",
+  "ch.qos.logback"              %   "logback-classic"         % "1.2.3"             % Test,
   "org.scalatest"               %%  "scalatest"               % "3.0.3"             % Test,
   "org.mockito"                 %   "mockito-all"             % "1.10.19"           % Test
 )

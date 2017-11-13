@@ -9,6 +9,5 @@ object ConfApp extends App {
   println(s"conf.text: $text")
   val value = ConfigFactory.load().getString("my.secret.value")
   println(s"my.secret.value: $value")
-
   println(args.toList)
 }
