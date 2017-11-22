@@ -1,6 +1,5 @@
 package io.sqooba.conf
 
-import EnvUtil
 import org.scalatest.{FlatSpec, Matchers}
 
 class SqConfSpec extends FlatSpec with Matchers {
