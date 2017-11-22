@@ -1,6 +1,6 @@
-package io.sqooba
+package io.sqooba.conf
 
-object TestUtil {
+object EnvUtil {
 
   val field = System.getenv().getClass.getDeclaredField("m")
   field.setAccessible(true)

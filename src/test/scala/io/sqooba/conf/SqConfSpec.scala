@@ -1,6 +1,6 @@
 package io.sqooba.conf
 
-import io.sqooba.TestUtil
+import EnvUtil
 import org.scalatest.{FlatSpec, Matchers}
 
 class SqConfSpec extends FlatSpec with Matchers {
@@ -14,28 +14,28 @@ class SqConfSpec extends FlatSpec with Matchers {
   }
 
   "read string from conf" should "get a string from conf" in {
-    TestUtil.removeEnv(conf.keyAsEnv("some.testStringValue"))
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testStringValue"))
     val prop = conf.getString("some.testStringValue")
     prop shouldBe a [String]
     prop shouldBe "string thing"
   }
 
   "read string from env" should "prefer env variable to conf" in {
-    TestUtil.setEnv(conf.keyAsEnv("some.testStringValue"), "newValue")
+    EnvUtil.setEnv(conf.keyAsEnv("some.testStringValue"), "newValue")
     val prop = conf.getString("some.testStringValue")
     prop shouldBe a [String]
     prop shouldBe "newValue"
   }
 
   "read int from conf" should "get an int from conf" in {
-    TestUtil.removeEnv(conf.keyAsEnv("some.testIntValue"))
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testIntValue"))
     val prop = conf.getInt("some.testIntValue")
     prop shouldBe a [java.lang.Integer]   // does not work with scala.Int for some reason
     prop shouldBe 187
   }
 
   "read int from env" should "refer env variable to conf" in {
-    TestUtil.setEnv(conf.keyAsEnv("some.testIntValue"), "50")
+    EnvUtil.setEnv(conf.keyAsEnv("some.testIntValue"), "50")
     val prop = conf.getInt("some.testIntValue")
     prop shouldBe a [java.lang.Integer]   // does not work with scala.Int for some reason
     prop shouldBe 50

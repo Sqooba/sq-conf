@@ -11,14 +11,12 @@ class SqConf(fileName: String = "application.conf") {
 
   val logger = Logger(this.getClass)
 
-  val conf: Config = {
-    ConfigFactory.load(fileName)
-  }
+  val conf: Config = ConfigFactory.load(fileName)
 
   def getInt(key: String): Int = {
     Properties.envOrNone(keyAsEnv(key)) match {
       case Some(env) => env.toInt
-      case None =>  conf.getInt(key)
+      case None => conf.getInt(key)
     }
   }
 
@@ -27,7 +25,7 @@ class SqConf(fileName: String = "application.conf") {
   def getBoolean(key: String): Boolean = {
     Properties.envOrNone(keyAsEnv(key)) match {
       case Some(env) => env.toBoolean
-      case None =>  conf.getBoolean(key)
+      case None => conf.getBoolean(key)
     }
   }
 
