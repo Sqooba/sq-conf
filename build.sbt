@@ -28,7 +28,6 @@ publishTo := {
   val artBaseUrl = "https://artifactory.sqooba.io/artifactory"
   // isSnapshot := true
   if (isSnapshot.value) {
-    isSnapshot := true
     Some(realm at s"$artBaseUrl/libs-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
   } else {
     Some(realm at s"$artBaseUrl/libs-release-local")
