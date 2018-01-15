@@ -13,19 +13,31 @@ class SqConf(fileName: String = "application.conf", prefix: Option[String] = Non
 
   val conf: Config = ConfigFactory.load(fileName)
 
-  def getInt(key: String): Int = {
-    Properties.envOrNone(keyAsEnv(key)) match {
-      case Some(env) => env.toInt
-      case None => conf.getInt(key)
+  def buildKey(key: String): String = {
+    prefix match {
+      case Some(pre) => s"$pre.$key"
+      case None => key
     }
   }
 
-  def getString(key: String): String = Properties.envOrElse(keyAsEnv(key), conf.getString(key))
+  def getInt(key: String): Int = {
+    val fullKey = buildKey(key)
+    Properties.envOrNone(keyAsEnv(fullKey)) match {
+      case Some(env) => env.toInt
+      case None => conf.getInt(fullKey)
+    }
+  }
+
+  def getString(key: String): String = {
+    val fullKey = buildKey(key)
+    Properties.envOrElse(keyAsEnv(fullKey), conf.getString(fullKey))
+  }
 
   def getBoolean(key: String): Boolean = {
-    Properties.envOrNone(keyAsEnv(key)) match {
+    val fullKey = buildKey(key)
+    Properties.envOrNone(keyAsEnv(fullKey)) match {
       case Some(env) => env.toBoolean
-      case None => conf.getBoolean(key)
+      case None => conf.getBoolean(fullKey)
     }
   }
 
@@ -35,7 +47,7 @@ class SqConf(fileName: String = "application.conf", prefix: Option[String] = Non
     asEnvKey
   }
 
-  def getConfig(confPath: String) = {
-    conf.getConfig(confPath)
+  def getConfig(confPath: String): SqConf = {
+    new SqConf(fileName, Some(confPath))
   }
 }
