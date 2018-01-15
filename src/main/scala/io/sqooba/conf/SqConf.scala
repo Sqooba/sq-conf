@@ -7,7 +7,7 @@ import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.Logger
 
-class SqConf(fileName: String = "application.conf") {
+class SqConf(fileName: String = "application.conf", prefix: Option[String] = None) {
 
   val logger = Logger(this.getClass)
 
@@ -33,5 +33,9 @@ class SqConf(fileName: String = "application.conf") {
     val asEnvKey = key.toUpperCase.replaceAll("""\.""", "_")
     logger.debug(s"PropertyKey: '$key' is as envKey: '$asEnvKey'")
     asEnvKey
+  }
+
+  def getConfig(confPath: String) = {
+    conf.getConfig(confPath)
   }
 }
