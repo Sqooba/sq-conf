@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class SqConfSpec extends FlatSpec with Matchers {
 
   val conf = new SqConf
-  val anotherConf = new SqConf("another.conf")
+  val anotherConf = new SqConf(Some("another.conf"))
 
   "convert conf path" should "uppercase it properly" in {
     val uppercased = conf.keyAsEnv("some.testIntValue")
