@@ -5,27 +5,56 @@ import scala.util.Properties
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import com.typesafe.scalalogging.Logger
+import com.typesafe.scalalogging.{LazyLogging}
 
-class SqConf(fileName: String = "application.conf") {
+class SqConf(fileName: Option[String] = None,
+             prefix: Option[String] = None,
+             valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
-  val logger = Logger(this.getClass)
-
-  val conf: Config = ConfigFactory.load(fileName)
-
-  def getInt(key: String): Int = {
-    Properties.envOrNone(keyAsEnv(key)) match {
-      case Some(env) => env.toInt
-      case None => conf.getInt(key)
+  val conf: Config = {
+    fileName match {
+      case Some(file) => ConfigFactory.load(file)
+      case _ => ConfigFactory.load()
     }
   }
 
-  def getString(key: String): String = Properties.envOrElse(keyAsEnv(key), conf.getString(key))
+  def buildKey(key: String): String = {
+    prefix match {
+      case Some(pre) => s"$pre.$key"
+      case None => key
+    }
+  }
+
+  def getInt(key: String): Int = {
+    val fullKey = buildKey(key)
+    if (valueOverrides.contains(fullKey)) {
+      valueOverrides(fullKey).toInt
+    } else {
+      Properties.envOrNone(keyAsEnv(fullKey)) match {
+        case Some(env) => env.toInt
+        case None => conf.getInt(fullKey)
+      }
+    }
+  }
+
+  def getString(key: String): String = {
+    val fullKey = buildKey(key)
+    if (valueOverrides.contains(fullKey)) {
+      valueOverrides(fullKey)
+    } else {
+      Properties.envOrElse(keyAsEnv(fullKey), conf.getString(fullKey))
+    }
+  }
 
   def getBoolean(key: String): Boolean = {
-    Properties.envOrNone(keyAsEnv(key)) match {
-      case Some(env) => env.toBoolean
-      case None => conf.getBoolean(key)
+    val fullKey = buildKey(key)
+    if (valueOverrides.contains(fullKey)) {
+      valueOverrides(fullKey).toBoolean
+    } else {
+      Properties.envOrNone(keyAsEnv(fullKey)) match {
+        case Some(env) => env.toBoolean
+        case None => conf.getBoolean(fullKey)
+      }
     }
   }
 
@@ -33,5 +62,9 @@ class SqConf(fileName: String = "application.conf") {
     val asEnvKey = key.toUpperCase.replaceAll("""\.""", "_")
     logger.debug(s"PropertyKey: '$key' is as envKey: '$asEnvKey'")
     asEnvKey
+  }
+
+  def getConfig(confPath: String): SqConf = {
+    new SqConf(fileName, Some(confPath))
   }
 }
