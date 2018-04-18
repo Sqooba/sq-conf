@@ -11,6 +11,8 @@ class SqConf(fileName: Option[String] = None,
              prefix: Option[String] = None,
              valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
+  def this() = this(None, None)
+
   val conf: Config = {
     fileName match {
       case Some(file) => ConfigFactory.load(file)
@@ -67,4 +69,10 @@ class SqConf(fileName: Option[String] = None,
   def getConfig(confPath: String): SqConf = {
     new SqConf(fileName, Some(confPath))
   }
+
+  def getJavaString(key: String): java.lang.String = getString(key)
+
+  def getJavaInt(key: String): java.lang.Integer = getInt(key)
+
+  def getJavaBoolean(key: String): java.lang.Boolean = getBoolean(key)
 }
