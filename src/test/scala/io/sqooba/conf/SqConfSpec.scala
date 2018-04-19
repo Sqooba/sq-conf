@@ -49,4 +49,26 @@ class SqConfSpec extends FlatSpec with Matchers {
     val asString = conf.conf.getAnyRef("some.testStringValue").toString
     asString shouldBe "string thing"
   }
+
+  "get t type array" should "give a list of strings" in {
+    val stringArray = conf.getListOf[String]("some.testStringListValue")
+    stringArray.forall(_.isInstanceOf[String]) shouldBe true
+    stringArray.length shouldBe 3
+  }
+
+  "get t type array" should "give a list of ints" in {
+    val stringArray = conf.getListOf[Int]("some.testIntListValue")
+    stringArray.forall(_.isInstanceOf[Int]) shouldBe true
+    stringArray.length shouldBe 3
+  }
+
+  "get t" should "return parameterized type" in {
+    val intprop = conf.get[Int]("some.testIntValue")
+    intprop shouldBe a [java.lang.Integer] // does not work with scala.Int for some reason
+    intprop shouldBe 187
+
+    val stringprop = conf.get[String]("some.testStringValue")
+    stringprop shouldBe a [String]
+    stringprop shouldBe "string thing"
+  }
 }

@@ -11,6 +11,8 @@ class SqConf(fileName: Option[String] = None,
              prefix: Option[String] = None,
              valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
+  def asJava() = new JavaSqConf(this)
+
   def this() = this(None, None)
 
   val conf: Config = {
@@ -60,19 +62,20 @@ class SqConf(fileName: Option[String] = None,
     }
   }
 
+  def get[T](key: String): T = conf.getAnyRef(key).asInstanceOf[T]
+
   def keyAsEnv(key: String): String = {
     val asEnvKey = key.toUpperCase.replaceAll("""\.""", "_")
     logger.debug(s"PropertyKey: '$key' is as envKey: '$asEnvKey'")
     asEnvKey
   }
 
+  def getListOf[T](key: String): List[T] = {
+    val l = conf.getAnyRefList(key)
+    l.toArray.map(x => {x.asInstanceOf[T]}).toList
+  }
+
   def getConfig(confPath: String): SqConf = {
     new SqConf(fileName, Some(confPath))
   }
-
-  def getJavaString(key: String): java.lang.String = getString(key)
-
-  def getJavaInt(key: String): java.lang.Integer = getInt(key)
-
-  def getJavaBoolean(key: String): java.lang.Boolean = getBoolean(key)
 }
