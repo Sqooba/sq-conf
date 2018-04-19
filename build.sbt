@@ -23,8 +23,8 @@ inConfig(External)(Defaults.testTasks)
 testOptions in External -= Tests.Argument("-l", "ExternalSpec")
 testOptions in External += Tests.Argument("-n", "ExternalSpec")
 
-val artUser = sys.env.get("ARTIFACTORY_USER").get
-val artPass = sys.env.get("ARTIFACTORY_PASSWORD").get
+val artUser = sys.env.get("ARTIFACTORY_USER").getOrElse("")
+val artPass = sys.env.get("ARTIFACTORY_PASSWORD").getOrElse("")
 
 credentials += Credentials("Artifactory Realm", "artifactory-v2.sqooba.io", artUser, artPass)
 
