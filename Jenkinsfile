@@ -2,7 +2,7 @@
 @Library("jenkinsfile-lib") _
 
 pipeline {
-    agent any
+    agent { label 'master' }
     stages {
         stage('Clean & Compile') {
             steps {
