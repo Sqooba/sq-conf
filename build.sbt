@@ -1,6 +1,6 @@
 organization := "io.sqooba"
-scalaVersion := "2.11.8"
-version      := "0.3.0"
+scalaVersion := "2.11.12"
+version      := "0.3.0.1-SNAPSHOT"
 name         := "sq-conf"
 
 crossScalaVersions := Seq("2.12.5", "2.11.12")
@@ -22,6 +22,11 @@ configs(External)
 inConfig(External)(Defaults.testTasks)
 testOptions in External -= Tests.Argument("-l", "ExternalSpec")
 testOptions in External += Tests.Argument("-n", "ExternalSpec")
+
+val artUser = sys.env.get("ARTIFACTORY_USER").get
+val artPass = sys.env.get("ARTIFACTORY_PASSWORD").get
+
+credentials += Credentials("Artifactory Realm", "artifactory-v2.sqooba.io", artUser, artPass)
 
 publishTo := {
   val realm = "Artifactory Realm"

@@ -2,8 +2,18 @@
 @Library("jenkinsfile-lib") _
 
 pipeline {
-    agent { label 'master' }
+    agent any
     stages {
+        stage("Propagate artifactory credentials") {
+            steps {
+                script {
+                    def server = Artifactory.server(env.ARTIFACTORY_ID)
+                    env.ARTIFACTORY_USER = server.username
+                    env.ARTIFACTORY_PASSWORD = server.password
+                }
+            }
+        }
+
         stage('Clean & Compile') {
             steps {
                 script {
