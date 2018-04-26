@@ -3,6 +3,9 @@
 
 pipeline {
     agent any
+    environment {
+        ARTIFACTORY_CREDS = credentials('artifactory-deployer')
+    }
     stages {
         stage('Clean & Compile') {
             steps {
@@ -31,9 +34,6 @@ pipeline {
         stage('Publish') {
             steps {
                 script {
-                    def server = Artifactory.server(env.ARTIFACTORY_ID)
-                    env.ARTIFACTORY_USER = server.username
-                    env.ARTIFACTORY_PASSWORD = server.password
                     def sbtHome = tool 'sbt 1.0'
                     sh "${sbtHome}/bin/sbt +publish"
                 }
