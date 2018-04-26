@@ -2,13 +2,16 @@
 @Library("jenkinsfile-lib") _
 
 pipeline {
-    agent { label 'master' }
+    agent any
+    environment {
+        ARTIFACTORY_CREDS = credentials('artifactory-deployer')
+    }
     stages {
         stage('Clean & Compile') {
             steps {
                 script {
                     def sbtHome = tool 'sbt 1.0'
-                    sh "${sbtHome}/bin/sbt clean +package"
+                    sh "${sbtHome}/bin/sbt \"set test in Test := {}\" clean +package"
                 }
             }
         }
