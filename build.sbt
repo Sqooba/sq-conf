@@ -31,7 +31,6 @@ credentials += Credentials("Artifactory Realm", "artifactory-v2.sqooba.io", artU
 publishTo := {
   val realm = "Artifactory Realm"
   val artBaseUrl = "https://artifactory-v2.sqooba.io/artifactory"
-  // isSnapshot := true
   if (isSnapshot.value) {
     Some(realm at s"$artBaseUrl/libs-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
   } else {
