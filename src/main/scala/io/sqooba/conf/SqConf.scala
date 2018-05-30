@@ -1,14 +1,17 @@
 package io.sqooba.conf
 
 
+import java.io.File
+
 import scala.util.Properties
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import com.typesafe.scalalogging.{LazyLogging}
+import com.typesafe.scalalogging.LazyLogging
 
 class SqConf(fileName: Option[String] = None,
              prefix: Option[String] = None,
+             file: Option[File] = None,
              valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def asJava() = new JavaSqConf(this)
@@ -16,9 +19,12 @@ class SqConf(fileName: Option[String] = None,
   def this() = this(None, None)
 
   val conf: Config = {
-    fileName match {
-      case Some(file) => ConfigFactory.load(file)
-      case _ => ConfigFactory.load()
+    (fileName, file) match {
+      case (Some(fileN),_) => ConfigFactory.load(fileN)
+      case (_,Some(fileF)) => ConfigFactory.parseFile(fileF)
+      case _ => {
+        ConfigFactory.load()
+      }
     }
   }
 
@@ -77,5 +83,11 @@ class SqConf(fileName: Option[String] = None,
 
   def getConfig(confPath: String): SqConf = {
     new SqConf(fileName, Some(confPath))
+  }
+}
+
+object SqConf {
+  def ofFile(file: File): SqConf = {
+    new SqConf(None, None, Some(file), Map())
   }
 }
