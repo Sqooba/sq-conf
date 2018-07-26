@@ -10,6 +10,8 @@ class JavaSqConf(sqConf: SqConf) {
 
 	def getBoolean(key: String): java.lang.Boolean = sqConf.getBoolean(key)
 
+	def getDuration(key: String): java.time.Duration = sqConf.getDuration(key)
+
 	def get[T](key: String): T = sqConf.get[T](key)
 
 	def getIterable[T](key: String): java.lang.Iterable[T] = {

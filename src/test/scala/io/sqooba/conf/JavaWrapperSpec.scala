@@ -34,6 +34,12 @@ class JavaWrapperSpec extends FlatSpec with Matchers {
 		propList shouldBe a [java.lang.Iterable[_]]
 	}
 
+	"java wrapper" should "return java duration" in {
+		val prop: java.time.Duration = javaWrapper.getDuration("some.testDurationValue")
+		prop shouldBe a [java.time.Duration]
+		prop.getSeconds shouldBe (10 * 60)
+	}
+
 	"parameterized type" should "return t" in {
 		val stringy: java.lang.String = javaWrapper.get[java.lang.String]("some.testStringValue")
 		stringy shouldBe a [java.lang.String]

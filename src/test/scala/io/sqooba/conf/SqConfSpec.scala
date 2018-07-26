@@ -1,5 +1,7 @@
 package io.sqooba.conf
 
+import java.time.Duration
+
 import org.scalatest.{FlatSpec, Matchers}
 
 class SqConfSpec extends FlatSpec with Matchers {
@@ -60,6 +62,11 @@ class SqConfSpec extends FlatSpec with Matchers {
     val stringArray = conf.getListOf[Int]("some.testIntListValue")
     stringArray.forall(_.isInstanceOf[Int]) shouldBe true
     stringArray.length shouldBe 3
+  }
+
+  "get duration" should "give duration" in {
+    val duration: Duration = conf.getDuration("some.testDurationValue")
+    println(duration)
   }
 
   "get t" should "return parameterized type" in {

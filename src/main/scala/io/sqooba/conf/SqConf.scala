@@ -2,11 +2,13 @@ package io.sqooba.conf
 
 
 import java.io.File
+import java.time.Duration
 
 import scala.util.Properties
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
+import com.typesafe.config.impl.DurationParser
 import com.typesafe.scalalogging.LazyLogging
 
 class SqConf(fileName: Option[String] = None,
@@ -64,6 +66,18 @@ class SqConf(fileName: Option[String] = None,
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => env.toBoolean
         case None => conf.getBoolean(fullKey)
+      }
+    }
+  }
+
+  def getDuration(key: String): Duration = {
+    val fullKey = buildKey(key)
+    if (valueOverrides.contains(fullKey)) {
+      DurationParser.parseDurationString(valueOverrides(fullKey), fullKey, "valueOverrides")
+    } else {
+      Properties.envOrNone(keyAsEnv(fullKey)) match {
+        case Some(env) => DurationParser.parseDurationString(env, fullKey, "environmentVariable")
+        case None => conf.getDuration(fullKey)
       }
     }
   }
