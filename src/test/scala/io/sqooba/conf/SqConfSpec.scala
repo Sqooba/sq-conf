@@ -14,20 +14,6 @@ class SqConfSpec extends FlatSpec with Matchers {
     uppercased shouldBe "SOME_TESTINTVALUE"
   }
 
-  "read string from conf" should "get a string from conf" in {
-    EnvUtil.removeEnv(conf.keyAsEnv("some.testStringValue"))
-    val prop = conf.getString("some.testStringValue")
-    prop shouldBe a [String]
-    prop shouldBe "string thing"
-  }
-
-  "read string from env" should "prefer env variable to conf" in {
-    EnvUtil.setEnv(conf.keyAsEnv("some.testStringValue"), "newValue")
-    val prop = conf.getString("some.testStringValue")
-    prop shouldBe a [String]
-    prop shouldBe "newValue"
-  }
-
   "read int from conf" should "get an int from conf" in {
     EnvUtil.removeEnv(conf.keyAsEnv("some.testIntValue"))
     val prop = conf.getInt("some.testIntValue")
@@ -35,11 +21,11 @@ class SqConfSpec extends FlatSpec with Matchers {
     prop shouldBe 187
   }
 
-  "read int from env" should "refer env variable to conf" in {
-    EnvUtil.setEnv(conf.keyAsEnv("some.testIntValue"), "50")
-    val prop = conf.getInt("some.testIntValue")
-    prop shouldBe a [java.lang.Integer]   // does not work with scala.Int for some reason
-    prop shouldBe 50
+  "read string from conf" should "get a string from conf" in {
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testStringValue"))
+    val prop = conf.getString("some.testStringValue")
+    prop shouldBe a [String]
+    prop shouldBe "string thing"
   }
 
   "another conf" should "have value" in {
@@ -59,6 +45,7 @@ class SqConfSpec extends FlatSpec with Matchers {
   }
 
   "get t type array" should "give a list of ints" in {
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testIntListValue"))
     val stringArray = conf.getListOf[Int]("some.testIntListValue")
     stringArray.forall(_.isInstanceOf[Int]) shouldBe true
     stringArray.length shouldBe 3
@@ -66,7 +53,15 @@ class SqConfSpec extends FlatSpec with Matchers {
 
   "get duration" should "give duration" in {
     val duration: Duration = conf.getDuration("some.testDurationValue")
-    println(duration)
+    duration shouldBe Duration.ofMinutes(10)
+  }
+
+  "get duration list" should "give duration" in {
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
+    val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
+
+    duration(0) shouldBe Duration.ofMinutes(10)
+    duration(1) shouldBe Duration.ofSeconds(100)
   }
 
   "get t" should "return parameterized type" in {

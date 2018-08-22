@@ -4,6 +4,7 @@ package io.sqooba.conf
 import java.io.File
 import java.time.Duration
 
+import scala.collection.JavaConversions._
 import scala.util.Properties
 
 import com.typesafe.config.Config
@@ -12,9 +13,9 @@ import com.typesafe.config.impl.DurationParser
 import com.typesafe.scalalogging.LazyLogging
 
 class SqConf(fileName: Option[String] = None,
-             prefix: Option[String] = None,
-             file: Option[File] = None,
-             valueOverrides: Map[String, String] = Map()) extends LazyLogging {
+prefix: Option[String] = None,
+file: Option[File] = None,
+valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def asJava() = new JavaSqConf(this)
 
@@ -24,9 +25,7 @@ class SqConf(fileName: Option[String] = None,
     (fileName, file) match {
       case (Some(fileN),_) => ConfigFactory.load(fileN)
       case (_,Some(fileF)) => ConfigFactory.parseFile(fileF)
-      case _ => {
-        ConfigFactory.load()
-      }
+      case _ => ConfigFactory.load()
     }
   }
 
@@ -93,6 +92,41 @@ class SqConf(fileName: Option[String] = None,
   def getListOf[T](key: String): List[T] = {
     val l = conf.getAnyRefList(key)
     l.toArray.map(x => {x.asInstanceOf[T]}).toList
+  }
+
+  def getListOfWithConversion[T](key: String, convert: String => T): List[T] = {
+    val fullKey = buildKey(key)
+
+    def stringToT(string: String): List[T] = string.split(',').map(convert).toList
+
+    if (valueOverrides.contains(fullKey)) {
+      stringToT(valueOverrides(fullKey))
+    } else {
+      Properties.envOrNone(keyAsEnv(fullKey)) match {
+        case Some(env) => {
+          stringToT(env)
+        }
+        case None => getListOf[T](fullKey)
+      }
+    }
+  }
+
+  def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, (str => str.trim.toInt))
+
+  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, (str => str.trim.toDouble))
+
+  def getListOfString(key: String): List[String] = getListOfWithConversion(key, (str => str.trim))
+
+  def getListOfBoolean(key: String): List[Boolean] = getListOfWithConversion(key, (str => str.trim.toBoolean))
+  def getListOfDuration(key: String): List[Duration] = {
+    val fullKey = buildKey(key)
+    if (valueOverrides.contains(fullKey) || Properties.envOrNone(keyAsEnv(fullKey)).isDefined) {
+      getListOfWithConversion(key, (str => {
+        DurationParser.parseDurationString(str, key, "listOfDuration")
+      }))
+    } else {
+      conf.getDurationList(fullKey).toList
+    }
   }
 
   def getConfig(confPath: String): SqConf = {
