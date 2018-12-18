@@ -74,18 +74,6 @@ class SqConfSpec extends FlatSpec with Matchers {
     duration shouldBe Duration.ofMinutes(10)
   }
 
-  "get duration list" should "give duration" in {
-    EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
-    val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
-
-    val firstDuration: Duration = duration.head
-    val tenMinDuration: Duration = Duration.ofMinutes(10)
-
-    firstDuration shouldBe tenMinDuration
-    //duration.head shouldBe Duration.ofMinutes(10)
-    // duration(1) shouldBe Duration.ofSeconds(100)
-  }
-
   "get t" should "return parameterized type" in {
     val intProp = conf.get[Int]("some.testIntValue")
     intProp shouldBe a [java.lang.Integer] // does not work with scala.Int for some reason
@@ -101,5 +89,15 @@ class SqConfSpec extends FlatSpec with Matchers {
       conf.getString("this.string.does.not.exist")
     }
     thrown.getMessage should include ("No configuration setting found for key")
+  }
+
+  "get duration list" should "give duration" in {
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
+    val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
+
+    val firstDuration: Duration = duration.head
+    val tenMinDuration: Duration = Duration.ofMinutes(10)
+
+    firstDuration shouldBe tenMinDuration
   }
 }
