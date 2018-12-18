@@ -5,7 +5,6 @@ import java.io.File
 import java.time.Duration
 
 import scala.util.Properties
-import collection.JavaConverters._
 import scala.collection.JavaConverters._
 
 import com.typesafe.config.Config
@@ -99,22 +98,6 @@ class SqConf(fileName: String = null,
       x.asInstanceOf[T]
     }).toList
   }
-  /*
-    def getListOfWithConversion[T](key: String, convert: String => T): List[T] = {
-      val fullKey = buildKey(key)
-
-      def stringToT(string: String): List[T] = string.split(',').map(convert).toList
-
-      if (valueOverwrites.contains(fullKey)) {
-        stringToT(valueOverwrites(fullKey))
-      } else {
-        Properties.envOrNone(keyAsEnv(fullKey)) match {
-          case Some(env) => stringToT(env)
-          case None => getListOf[T](fullKey)
-        }
-      }
-    }
-    */
 
   def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
@@ -125,7 +108,7 @@ class SqConf(fileName: String = null,
   def getListOfBoolean(key: String): List[Boolean] = getListOfWithConversion(key, str => str.trim.toBoolean)
 
   def getListOfDuration(key: String): List[Duration] = getListOfWithConversion[Duration](key, str =>
-    DurationParser.parseDurationString(str, key, "listOfDuration"), false)
+    DurationParser.parseDurationString(str, key, "listOfDuration"), cast = false)
 
   def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = true): List[T] = {
     val fullKey = buildKey(key)

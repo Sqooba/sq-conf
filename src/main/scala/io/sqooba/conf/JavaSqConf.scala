@@ -1,5 +1,7 @@
 package io.sqooba.conf
 
+import java.util
+
 class JavaSqConf(sqConf: SqConf) {
 
 	def getSqConf: SqConf = sqConf
@@ -19,6 +21,8 @@ class JavaSqConf(sqConf: SqConf) {
 		import scala.collection.JavaConverters._
 		list.asJava
 	}
+
+  def getListOf[T](key: String): util.List[T] = IterToList.fromIterToList(getIterable[T](key))
 
 	def keyAsEnv(key: String): String = sqConf.keyAsEnv(key)
 
