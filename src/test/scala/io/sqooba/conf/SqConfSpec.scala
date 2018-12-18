@@ -2,6 +2,7 @@ package io.sqooba.conf
 
 import java.time.Duration
 
+import com.typesafe.config.ConfigException
 import org.scalatest.{FlatSpec, Matchers}
 
 class SqConfSpec extends FlatSpec with Matchers {
@@ -29,6 +30,12 @@ class SqConfSpec extends FlatSpec with Matchers {
     val prop = conf.getString("some.testStringValue")
     prop shouldBe a [String]
     prop shouldBe "string thing"
+  }
+
+  "read big int from conf" should "get a string from conf" in {
+    val prop = conf.getBigInt("some.testBigIntValue")
+    prop shouldBe a [BigInt]
+    prop shouldBe BigInt(123456789)
   }
 
   "another conf" should "have value" in {
@@ -67,21 +74,30 @@ class SqConfSpec extends FlatSpec with Matchers {
     duration shouldBe Duration.ofMinutes(10)
   }
 
+  "get t" should "return parameterized type" in {
+    val intProp = conf.get[Int]("some.testIntValue")
+    intProp shouldBe a [java.lang.Integer] // does not work with scala.Int for some reason
+    intProp shouldBe 187
+
+    val stringProp = conf.get[String]("some.testStringValue")
+    stringProp shouldBe a [String]
+    stringProp shouldBe "string thing"
+  }
+
+  "non existent key" should "throw exception" in {
+    val thrown = intercept[ConfigException] {
+      conf.getString("this.string.does.not.exist")
+    }
+    thrown.getMessage should include ("No configuration setting found for key")
+  }
+
   "get duration list" should "give duration" in {
     EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
     val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
 
-    duration.head shouldBe Duration.ofMinutes(10)
-    duration(1) shouldBe Duration.ofSeconds(100)
-  }
+    val firstDuration: Duration = duration.head
+    val tenMinDuration: Duration = Duration.ofMinutes(10)
 
-  "get t" should "return parameterized type" in {
-    val intprop = conf.get[Int]("some.testIntValue")
-    intprop shouldBe a [java.lang.Integer] // does not work with scala.Int for some reason
-    intprop shouldBe 187
-
-    val stringprop = conf.get[String]("some.testStringValue")
-    stringprop shouldBe a [String]
-    stringprop shouldBe "string thing"
+    firstDuration shouldBe tenMinDuration
   }
 }

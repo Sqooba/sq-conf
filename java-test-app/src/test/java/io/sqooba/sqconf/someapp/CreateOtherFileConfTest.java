@@ -2,8 +2,6 @@ package io.sqooba.sqconf.someapp;
 
 import io.sqooba.conf.JavaSqConf;
 import io.sqooba.conf.SqConf;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 
@@ -22,12 +20,7 @@ public class CreateOtherFileConfTest {
     @Test
     public void getIntListCorrectly() {
         Iterable<Integer> someInts = conf.getIterable("some.intList");
-        List<Integer> ints = new ArrayList<>();
-        Iterator<Integer> iter = someInts.iterator();
-
-        while (iter.hasNext()) {
-            ints.add(iter.next());
-        }
+        List<Integer> ints = Util.fromIterToList(someInts);
         assertEquals(3, ints.size());
     }
 
