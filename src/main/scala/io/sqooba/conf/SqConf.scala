@@ -56,9 +56,22 @@ class SqConf(fileName: String = null,
     if (valueOverwrites.contains(fullKey)) {
       valueOverwrites(fullKey)
     } else {
-      Properties.envOrElse(keyAsEnv(fullKey), conf.getString(fullKey))
+      Properties.envOrNone(keyAsEnv(fullKey)) match {
+        case Some(env) => env
+        case None => conf.getString(fullKey)
+      }
     }
   }
+
+  def getIntNew(key: String): Int = getValueForKey[Int](key, x => x.toInt)
+
+  def getStringNew(key: String): String = getValueForKey[String](key, x => x)
+
+  def getBooleanNew(key: String): Boolean = getValueForKey[Boolean](key, x => x.toBoolean)
+
+  def getLongNew(key: String): Long = getValueForKey[Long](key, x => x.toLong)
+
+  def getBigInt(key: String): BigInt = getValueForKey[BigInt](key, x => BigInt(x))
 
   def getBoolean(key: String): Boolean = {
     val fullKey = buildKey(key)
@@ -82,6 +95,20 @@ class SqConf(fileName: String = null,
         case None => conf.getDuration(fullKey)
       }
     }
+  }
+
+  def getValueForKey[T](key: String, converter: (String => T)): T = {
+    val fullKey = buildKey(key)
+    if (valueOverwrites.contains(fullKey)) {
+      converter(valueOverwrites(fullKey))
+    } else {
+      Properties.envOrNone(keyAsEnv(fullKey)) match {
+        case Some(env) => converter(env)
+        case None => converter(conf.getString(fullKey))
+      }
+    }
+
+    // conf.getAnyRef(key).asInstanceOf[T]
   }
 
   def get[T](key: String): T = conf.getAnyRef(key).asInstanceOf[T]

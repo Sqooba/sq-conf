@@ -63,4 +63,11 @@ class EnvOverwritesSpec extends FlatSpec with Matchers {
 		durationArray(2) shouldBe Duration.ofHours(1)
 		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
 	}
+
+  "reading key that is not in the conf but is env variable" should "work just as well" in {
+    val testKey = "this.key.does.not.exist"
+    val testVal = "this_is_test_val"
+    EnvUtil.setEnv(conf.keyAsEnv(testKey), testVal)
+    conf.getString(testKey) shouldBe testVal
+  }
 }
