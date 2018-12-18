@@ -78,8 +78,12 @@ class SqConfSpec extends FlatSpec with Matchers {
     EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
     val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
 
-    duration.head shouldBe Duration.ofMinutes(10)
-    duration(1) shouldBe Duration.ofSeconds(100)
+    val firstDuration: Duration = duration.head
+    val tenMinDuration: Duration = Duration.ofMinutes(10)
+
+    firstDuration shouldBe tenMinDuration
+    //duration.head shouldBe Duration.ofMinutes(10)
+    // duration(1) shouldBe Duration.ofSeconds(100)
   }
 
   "get t" should "return parameterized type" in {

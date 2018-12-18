@@ -1,5 +1,7 @@
 package io.sqooba.conf
 
+import java.time.Duration
+
 import org.scalatest.{FlatSpec, Matchers}
 
 class GenGetterSpec extends FlatSpec with Matchers {
@@ -24,4 +26,14 @@ class GenGetterSpec extends FlatSpec with Matchers {
     long shouldBe prop
   }
 */
+
+  "get duration list" should "give duration" in {
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
+    val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
+
+    val firstDuration: Duration = duration.head
+    val tenMinDuration: Duration = Duration.ofMinutes(10)
+
+    firstDuration shouldBe tenMinDuration
+  }
 }
