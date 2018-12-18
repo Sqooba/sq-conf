@@ -4,7 +4,7 @@ import java.time.Duration
 
 import org.scalatest.{FlatSpec, Matchers}
 
-class EnvOverridesSpec extends FlatSpec with Matchers {
+class EnvOverwritesSpec extends FlatSpec with Matchers {
 
 	 // testIntListValue = [123, 23, 69]
 	 val conf = new SqConf
@@ -14,6 +14,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		val prop = conf.getInt("some.testIntValue")
 		prop shouldBe a [java.lang.Integer]   // does not work with scala.Int for some reason
 		prop shouldBe 50
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testIntValue"))
 	}
 
 	"read string from env" should "prefer env variable to conf" in {
@@ -21,6 +22,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		val prop = conf.getString("some.testStringValue")
 		prop shouldBe a [String]
 		prop shouldBe "newValue"
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testStringValue"))
 	}
 
 	"read int type array" should "give a list of ints" in {
@@ -29,6 +31,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		intArray.forall(_.isInstanceOf[Int]) shouldBe true
 		intArray.length shouldBe 3
 		intArray should contain allOf (1,2,3)
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testIntListValue"))
 	}
 
 	"read string type array" should "give a list of string" in {
@@ -37,6 +40,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		stringArray.forall(_.isInstanceOf[String]) shouldBe true
 		stringArray.length shouldBe 3
 		stringArray should contain allOf ("first","second","third")
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testStringListValue"))
 	}
 
 	"read boolean type array" should "give a list of booleans" in {
@@ -45,6 +49,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		booleanArray.forall(_.isInstanceOf[Boolean]) shouldBe true
 		booleanArray.length shouldBe 3
 		booleanArray should contain allOf (true, false)
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testBooleanListValue"))
 	}
 	"read duration type array" should "give a list of duration" in {
 		// import scala.concurrent.duration._
@@ -56,11 +61,6 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		durationArray(0) shouldBe Duration.ofMinutes(10)
 		durationArray(1) shouldBe Duration.ofSeconds(5)
 		durationArray(2) shouldBe Duration.ofHours(1)
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
 	}
-
-	/*/
-  testBooleanValue = true
-  testBooleanListValue = [true, false, true]
-  testDurationValue = 10m
-	 */
 }
