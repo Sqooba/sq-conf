@@ -1,9 +1,9 @@
 organization := "io.sqooba"
-scalaVersion := "2.11.12"
-version      := "0.3.5"
+scalaVersion := "2.12.7"
+version      := "0.3.5.7"
 name         := "sq-conf"
 
-crossScalaVersions := Seq("2.12.5", "2.11.12")
+crossScalaVersions := Seq("2.12.7", "2.11.12")
 
 libraryDependencies ++= Seq(
   "com.typesafe"                %   "config"                  % "1.3.2",

@@ -6,8 +6,11 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class SqConfSpec extends FlatSpec with Matchers {
 
-  val conf = new SqConf
-  val anotherConf = new SqConf(Some("another.conf"))
+  val conf: SqConf = new SqConf
+  val anotherConf: SqConf = SqConf.forFilename("another.conf")
+
+  val overWrite = Map("some.testIntValue" -> "15")
+  val anotherConfWithOverrides: SqConf = SqConf.forFilename("another.conf").withOverwrites(overWrite)
 
   "convert conf path" should "uppercase it properly" in {
     val uppercased = conf.keyAsEnv("some.testIntValue")
@@ -31,6 +34,14 @@ class SqConfSpec extends FlatSpec with Matchers {
   "another conf" should "have value" in {
     val prop = anotherConf.getBoolean("this.has.conf")
     prop shouldBe true
+  }
+
+  "another conf with overwrites" should "have a different value" in {
+    val prop1 = anotherConf.getInt("some.testIntValue")
+    val prop2 = anotherConfWithOverrides.getInt("some.testIntValue")
+    prop2 shouldBe 15
+    prop1 should not be prop2
+    prop1 shouldBe 100
   }
 
   "direct access to typesafe conf" should "work" in {
@@ -60,7 +71,7 @@ class SqConfSpec extends FlatSpec with Matchers {
     EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
     val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
 
-    duration(0) shouldBe Duration.ofMinutes(10)
+    duration.head shouldBe Duration.ofMinutes(10)
     duration(1) shouldBe Duration.ofSeconds(100)
   }
 

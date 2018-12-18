@@ -4,7 +4,7 @@ package io.sqooba.conf
 import java.io.File
 import java.time.Duration
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.util.Properties
 
 import com.typesafe.config.Config
@@ -12,34 +12,37 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.config.impl.DurationParser
 import com.typesafe.scalalogging.LazyLogging
 
-class SqConf(fileName: Option[String] = None,
-prefix: Option[String] = None,
-file: Option[File] = None,
-valueOverrides: Map[String, String] = Map()) extends LazyLogging {
+// Here we have nulls and avoid option on purpose so the java bindings work without scala standard lib
+class SqConf(fileName: String = null,
+             file: File = null,
+             config: Config = null,
+             prefix: String = null,
+             valueOverwrites: Map[String, String] = Map())  extends LazyLogging {
+
+  def this() = this(null, null, null, null)
 
   def asJava() = new JavaSqConf(this)
 
-  def this() = this(None, None)
-
   val conf: Config = {
-    (fileName, file) match {
-      case (Some(fileN),_) => ConfigFactory.load(fileN)
-      case (_,Some(fileF)) => ConfigFactory.parseFile(fileF)
+    (fileName, file, config) match {
+      case (null, null, conf:Config) => conf
+      case (fileN: String, null, null) => ConfigFactory.load(fileN)
+      case (_, fileF: File, null) => ConfigFactory.parseFile(fileF)
       case _ => ConfigFactory.load()
     }
   }
 
   def buildKey(key: String): String = {
     prefix match {
-      case Some(pre) => s"$pre.$key"
-      case None => key
+      case null => key
+      case pre => s"$pre.$key"
     }
   }
 
   def getInt(key: String): Int = {
     val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey)) {
-      valueOverrides(fullKey).toInt
+    if (valueOverwrites.contains(fullKey)) {
+      valueOverwrites(fullKey).toInt
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => env.toInt
@@ -50,8 +53,8 @@ valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def getString(key: String): String = {
     val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey)) {
-      valueOverrides(fullKey)
+    if (valueOverwrites.contains(fullKey)) {
+      valueOverwrites(fullKey)
     } else {
       Properties.envOrElse(keyAsEnv(fullKey), conf.getString(fullKey))
     }
@@ -59,8 +62,8 @@ valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def getBoolean(key: String): Boolean = {
     val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey)) {
-      valueOverrides(fullKey).toBoolean
+    if (valueOverwrites.contains(fullKey)) {
+      valueOverwrites(fullKey).toBoolean
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => env.toBoolean
@@ -71,8 +74,8 @@ valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def getDuration(key: String): Duration = {
     val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey)) {
-      DurationParser.parseDurationString(valueOverrides(fullKey), fullKey, "valueOverrides")
+    if (valueOverwrites.contains(fullKey)) {
+      DurationParser.parseDurationString(valueOverwrites(fullKey), fullKey, "valueOverrides")
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => DurationParser.parseDurationString(env, fullKey, "environmentVariable")
@@ -91,7 +94,9 @@ valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def getListOf[T](key: String): List[T] = {
     val l = conf.getAnyRefList(key)
-    l.toArray.map(x => {x.asInstanceOf[T]}).toList
+    l.toArray.map(x => {
+      x.asInstanceOf[T]
+    }).toList
   }
 
   def getListOfWithConversion[T](key: String, convert: String => T): List[T] = {
@@ -99,43 +104,60 @@ valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
     def stringToT(string: String): List[T] = string.split(',').map(convert).toList
 
-    if (valueOverrides.contains(fullKey)) {
-      stringToT(valueOverrides(fullKey))
+    if (valueOverwrites.contains(fullKey)) {
+      stringToT(valueOverwrites(fullKey))
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
-        case Some(env) => {
-          stringToT(env)
-        }
+        case Some(env) => stringToT(env)
         case None => getListOf[T](fullKey)
       }
     }
   }
 
-  def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, (str => str.trim.toInt))
+  def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
-  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, (str => str.trim.toDouble))
+  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, str => str.trim.toDouble)
 
-  def getListOfString(key: String): List[String] = getListOfWithConversion(key, (str => str.trim))
+  def getListOfString(key: String): List[String] = getListOfWithConversion(key, str => str.trim)
 
-  def getListOfBoolean(key: String): List[Boolean] = getListOfWithConversion(key, (str => str.trim.toBoolean))
+  def getListOfBoolean(key: String): List[Boolean] = getListOfWithConversion(key, str => str.trim.toBoolean)
+
   def getListOfDuration(key: String): List[Duration] = {
     val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey) || Properties.envOrNone(keyAsEnv(fullKey)).isDefined) {
-      getListOfWithConversion(key, (str => {
+    if (valueOverwrites.contains(fullKey) || Properties.envOrNone(keyAsEnv(fullKey)).isDefined) {
+      getListOfWithConversion(key, str => {
         DurationParser.parseDurationString(str, key, "listOfDuration")
-      }))
+      })
     } else {
-      conf.getDurationList(fullKey).toList
+      conf.getDurationList(fullKey).asScala.toList
     }
   }
 
   def getConfig(confPath: String): SqConf = {
-    new SqConf(fileName, Some(confPath))
+    // new SqConf(fileName, Some(confPath))
+    new SqConf(null, null, config, confPath)
+  }
+
+  def withOverwrites(overrides: Map[String, String]): SqConf = {
+    new SqConf(null, null, config, prefix, overrides)
   }
 }
 
 object SqConf {
-  def ofFile(file: File): SqConf = {
-    new SqConf(None, None, Some(file), Map())
+
+  def forFile(file: File): SqConf = {
+    new SqConf(null, file, null, null, Map())
+  }
+
+  def forConfig(config: Config): SqConf = {
+    new SqConf(null, null, config, null, Map())
+  }
+
+  def forFilename(fileName: String): SqConf = {
+    new SqConf(fileName, null, null, null)
+  }
+
+  def default(): SqConf = {
+    new SqConf(null, null, null, null)
   }
 }

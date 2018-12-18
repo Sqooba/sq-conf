@@ -2,7 +2,7 @@ package io.sqooba.conf
 
 class JavaSqConf(sqConf: SqConf) {
 
-	def getSqConf(): SqConf = sqConf
+	def getSqConf: SqConf = sqConf
 
 	def getString(key: String): java.lang.String = sqConf.getString(key)
 
@@ -20,5 +20,12 @@ class JavaSqConf(sqConf: SqConf) {
 		list.asJava
 	}
 
-	def keyAsEnv(key: String) = sqConf.keyAsEnv(key)
+	def keyAsEnv(key: String): String = sqConf.keyAsEnv(key)
+
+	def withOverwrites(ow: java.util.Map[java.lang.String, java.lang.String]): JavaSqConf = {
+    val sMap = ow.keySet().toArray().map(key => {
+      (key.toString, ow.get(key))
+    }).toMap
+    sqConf.withOverwrites(sMap).asJava()
+  }
 }
