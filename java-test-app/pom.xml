@@ -7,15 +7,10 @@
   <dependencies>
     <dependency>
       <groupId>io.sqooba</groupId>
-      <artifactId>sq-conf_2.11</artifactId>
-      <version>0.3.5.7</version>
+      <artifactId>sq-conf_2.12</artifactId>
+      <version>0.3.5.9</version>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
