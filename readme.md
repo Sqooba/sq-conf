@@ -1,5 +1,9 @@
 # Sq-Conf
 
+This wrapper for sqConf was mainly created to make running applications running on containers easier. Mainly
+overriden values from environment variables is made easier, no need to specifically define this in config.
+Also key does not need to exist in the config in the first place. 
+
 Wrapper around typesafe-config library ("com.typesafe.config" % "1.3.3") that allows overriding variables with 
 commandline parameters or environment variables. Reads file called application.conf from resources -folder on default.
 ```
@@ -14,8 +18,8 @@ commandline parameters or environment variables. Reads file called application.c
     val sqConf = SqConf.forFile(configAsFile) // java.util.File 
 ```
 
-## Value overWrites example
-Values in the config can be programatically overwriten uses
+## Value overrides example
+Values in the config can be programatically overriden uses
 ```
 	val overwrites = Map("some.testIntValue" -> "15", "some.testStringValue" -> "overridenstring")
 
@@ -35,6 +39,9 @@ in the original config file.
 	sqConf.getInt("some.testIntValue") // returns 150
 ```
 
+## Other formats
+SqConf supports all the formats that the underlying typesafe config also supports.
+
 ## Java Wrapper
 SqConf also provides a java wrapper that returns java data types.
 ```
@@ -47,6 +54,6 @@ SqConf also provides a java wrapper that returns java data types.
 
 # Change History
 
-- 0.4.0 dependency version upgrades
+- 0.4.0 dependency version upgrades, better documentation.
 - 0.3.6 remove options from constructors so java wrapper works without scala standard lib
 

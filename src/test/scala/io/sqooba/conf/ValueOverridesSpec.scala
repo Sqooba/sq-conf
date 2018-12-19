@@ -4,7 +4,7 @@ import java.time.Duration
 
 import org.scalatest.{FlatSpec, Matchers}
 
-class ValueOverWritesSpec extends FlatSpec with Matchers {
+class ValueOverridesSpec extends FlatSpec with Matchers {
 
   val overWrites = Map("some.testIntValue" -> "15",
     "some.testStringValue" -> "overridenstring",
@@ -12,9 +12,9 @@ class ValueOverWritesSpec extends FlatSpec with Matchers {
     "some.testStringListValue" -> "first,second,third",
     "some.durationListValue" -> "10s, 10m")
 
-  val sqConf: SqConf = new SqConf(valueOverwrites = overWrites)
+  val sqConf: SqConf = new SqConf(valueOverrides = overWrites)
 
-  val sqConfBuilder: SqConf = new SqConf().withOverwrites(overWrites)
+  val sqConfBuilder: SqConf = new SqConf().withOverrides(overWrites)
 
   "overwritten int" should "return value that matches the one in the map" in {
     sqConf.getInt("some.testIntValue") shouldBe 15

@@ -26,10 +26,10 @@ class JavaSqConf(sqConf: SqConf) {
 
 	def keyAsEnv(key: String): String = sqConf.keyAsEnv(key)
 
-	def withOverwrites(ow: java.util.Map[java.lang.String, java.lang.String]): JavaSqConf = {
-    val sMap = ow.keySet().toArray().map(key => {
-      (key.toString, ow.get(key))
+	def withOverrides(or: java.util.Map[java.lang.String, java.lang.String]): JavaSqConf = {
+    val sMap = or.keySet().toArray().map(key => {
+      (key.toString, or.get(key))
     }).toMap
-    sqConf.withOverwrites(sMap).asJava()
+    sqConf.withOverrides(sMap).asJava()
   }
 }

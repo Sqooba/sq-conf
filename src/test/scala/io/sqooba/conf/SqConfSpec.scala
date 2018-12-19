@@ -11,7 +11,7 @@ class SqConfSpec extends FlatSpec with Matchers {
   val anotherConf: SqConf = SqConf.forFilename("another.conf")
 
   val overWrite = Map("some.testIntValue" -> "15")
-  val anotherConfWithOverrides: SqConf = SqConf.forFilename("another.conf").withOverwrites(overWrite)
+  val anotherConfWithOverrides: SqConf = SqConf.forFilename("another.conf").withOverrides(overWrite)
 
   "convert conf path" should "uppercase it properly" in {
     val uppercased = conf.keyAsEnv("some.testIntValue")
