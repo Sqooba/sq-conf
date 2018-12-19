@@ -52,7 +52,7 @@ SqConf also provides a java wrapper that returns java data types.
 ```
 
 ## Getting started
-Add sqConf to your project:
+Add sqConf to your project, with sbt add this simple line:
 ```
     "io.sqooba" %% "sq-conf" % "0.4.0", 
 ```
