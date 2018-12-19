@@ -51,7 +51,7 @@ SqConf also provides a java wrapper that returns java data types.
     javaWrapper.getString("some.testStringValue") // returns java.lang.String
 ```
 
-# Getting started
+## Getting started
 Add sqConf to your project:
 ```
     "io.sqooba" %% "sq-conf" % "0.4.0", 
@@ -67,7 +67,7 @@ here's a workaround, add this to your pom.xml:
     </dependency>
 ```
 
-# Change History
+## Change History
 
 - 0.4.0 dependency version upgrades, better documentation.
 - 0.3.6 remove options from constructors so java wrapper works without scala standard lib
