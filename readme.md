@@ -19,11 +19,11 @@ commandline parameters or environment variables. Reads file called application.c
 ```
 
 ## Value overrides example
-Values in the config can be programatically overriden uses
+Values in the config can be programatically overriden. This is convenient especially when testing.
 ```
-    val overwrites = Map("some.testIntValue" -> "15", "some.testStringValue" -> "overridenstring")
+    val overrideMap = Map("some.testIntValue" -> "15", "some.testStringValue" -> "overridenstring")
 
-    val sqConf: SqConf = SqConf.default.withOverrides(overwrites = overwrites)
+    val sqConf: SqConf = SqConf.default.withOverrides(overrides = overrideMap)
 	
     sqConf.getInt("some.testIntValue") // returns 15
 ```
@@ -49,7 +49,6 @@ SqConf also provides a java wrapper that returns java data types.
 	
     javaWrapper.getInt("some.testIntValue") // returns java.lang.Integer
     javaWrapper.getString("some.testStringValue") // returns java.lang.String
-	
 ```
 
 # Change History
