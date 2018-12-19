@@ -129,7 +129,7 @@ class SqConf(fileName: String = null,
     new SqConf(null, null, config, confPath)
   }
 
-  def withOverwrites(overrides: Map[String, String]): SqConf = {
+  def withOverwrites(overwrites: Map[String, String]): SqConf = {
     new SqConf(null, null, config, prefix, overrides)
   }
 }
