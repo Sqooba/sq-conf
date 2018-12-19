@@ -1,11 +1,10 @@
 # Sq-Conf
 
-This wrapper for sqConf was mainly created to make running applications running on containers easier. Mainly
-overriden values from environment variables is made easier, no need to specifically define this in config.
+SqConf is a thin wrapper for typesafe-config library ("com.typesafe.config" % "1.3.3") that was mainly 
+created to make running applications running on containers easier. Mainly
+overriding values from environment variables is made easier, no need to specifically define this in config.
 Also key does not need to exist in the config in the first place. 
 
-Wrapper around typesafe-config library ("com.typesafe.config" % "1.3.3") that allows overriding variables with 
-commandline parameters or environment variables. Reads file called application.conf from resources -folder on default.
 ```
     // reads application.conf
     val sqConf = new SqConf() 
