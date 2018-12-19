@@ -1,7 +1,7 @@
 # Sq-Conf
 
 SqConf is a thin wrapper for typesafe-config library ("com.typesafe.config" % "1.3.3") that was mainly 
-created to make running applications running on containers easier. Mainly
+created to make configuring applications running on containers easier. Mainly
 overriding values from environment variables is made easier, no need to specifically define this in config.
 Also key does not need to exist in the config in the first place. 
 
@@ -56,7 +56,7 @@ Add sqConf to your project, with sbt add this simple line:
     "io.sqooba" %% "sq-conf" % "0.4.0", 
 ```
 
-And the masochists using maven, please go get some professional help, you need it. Until meds kick in, 
+And the whiny masochists using maven, please go get some professional help, you need it. Until meds kick in, 
 here's a workaround, add this to your pom.xml:
 ```
     <dependency>
