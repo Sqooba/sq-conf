@@ -21,22 +21,22 @@ commandline parameters or environment variables. Reads file called application.c
 ## Value overrides example
 Values in the config can be programatically overriden uses
 ```
-	val overwrites = Map("some.testIntValue" -> "15", "some.testStringValue" -> "overridenstring")
+    val overwrites = Map("some.testIntValue" -> "15", "some.testStringValue" -> "overridenstring")
 
-	val sqConf: SqConf = SqConf.default.withOverrides(overwrites = overwrites)
+    val sqConf: SqConf = SqConf.default.withOverrides(overwrites = overwrites)
 	
-	sqConf.getInt("some.testIntValue") // returns 15
+    sqConf.getInt("some.testIntValue") // returns 15
 ```
 
 ## Using environment variables
 Environment variables are preferred over all other options and work for keys that are not available
 in the original config file.
 ```
-	export SOME_TESTINTVALUE="150"
+    export SOME_TESTINTVALUE="150"
 
-	val sqConf: SqConf = SqConf.default()
+    val sqConf: SqConf = SqConf.default()
 	
-	sqConf.getInt("some.testIntValue") // returns 150
+    sqConf.getInt("some.testIntValue") // returns 150
 ```
 
 ## Other formats
@@ -45,10 +45,10 @@ SqConf supports all the formats that the underlying typesafe config also support
 ## Java Wrapper
 SqConf also provides a java wrapper that returns java data types.
 ```
-	val javaWrapper = new SqConf().asJava()
+    val javaWrapper = new SqConf().asJava()
 	
-	javaWrapper.getInt("some.testIntValue") // returns java.lang.Integer
-	javaWrapper.getString("some.testStringValue") // returns java.lang.String
+    javaWrapper.getInt("some.testIntValue") // returns java.lang.Integer
+    javaWrapper.getString("some.testStringValue") // returns java.lang.String
 	
 ```
 
