@@ -51,6 +51,22 @@ SqConf also provides a java wrapper that returns java data types.
     javaWrapper.getString("some.testStringValue") // returns java.lang.String
 ```
 
+# Getting started
+Add sqConf to your project:
+```
+    "io.sqooba" %% "sq-conf" % "0.4.0", 
+```
+
+And the masochists using maven, please go get some professional help, you need it. Until meds kick in, 
+here's a workaround, add this to your pom.xml:
+```
+    <dependency>
+      <groupId>io.sqooba</groupId>
+      <artifactId>sq-conf_2.12</artifactId>
+      <version>0.4.0</version>
+    </dependency>
+```
+
 # Change History
 
 - 0.4.0 dependency version upgrades, better documentation.
