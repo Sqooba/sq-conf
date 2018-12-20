@@ -17,7 +17,7 @@ class SqConf(fileName: String = null,
              file: File = null,
              config: Config = null,
              prefix: String = null,
-             valueOverwrites: Map[String, String] = Map()) extends LazyLogging {
+             valueOverrides: Map[String, String] = Map()) extends LazyLogging {
 
   def this() = this(null, null, null, null)
 
@@ -51,8 +51,8 @@ class SqConf(fileName: String = null,
 
   def getDuration(key: String): Duration = {
     val fullKey = buildKey(key)
-    if (valueOverwrites.contains(fullKey)) {
-      DurationParser.parseDurationString(valueOverwrites(fullKey), fullKey, "valueOverrides")
+    if (valueOverrides.contains(fullKey)) {
+      DurationParser.parseDurationString(valueOverrides(fullKey), fullKey, "valueOverrides")
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => DurationParser.parseDurationString(env, fullKey, "environmentVariable")
@@ -63,8 +63,8 @@ class SqConf(fileName: String = null,
 
   def getValueForKey[T](key: String, converter: String => T): T = {
     val fullKey = buildKey(key)
-    if (valueOverwrites.contains(fullKey)) {
-      converter(valueOverwrites(fullKey))
+    if (valueOverrides.contains(fullKey)) {
+      converter(valueOverrides(fullKey))
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => converter(env)
@@ -115,8 +115,8 @@ class SqConf(fileName: String = null,
 
     def stringToT(string: String): List[T] = string.split(',').map(x => convert(x)).toList
 
-    if (valueOverwrites.contains(fullKey)) {
-      stringToT(valueOverwrites(fullKey))
+    if (valueOverrides.contains(fullKey)) {
+      stringToT(valueOverrides(fullKey))
     } else {
       Properties.envOrNone(keyAsEnv(fullKey)) match {
         case Some(env) => stringToT(env)
@@ -129,7 +129,7 @@ class SqConf(fileName: String = null,
     new SqConf(null, null, config, confPath)
   }
 
-  def withOverwrites(overrides: Map[String, String]): SqConf = {
+  def withOverrides(overrides: Map[String, String]): SqConf = {
     new SqConf(null, null, config, prefix, overrides)
   }
 }
