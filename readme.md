@@ -66,6 +66,10 @@ here's a workaround, add this to your pom.xml:
     </dependency>
 ```
 
+## Future Plans
+- interface based java transformer for custom types
+- get as java.util.Properties convenience
+
 ## Change History
 
 - 0.4.1 remove dependency to option for the generic getter

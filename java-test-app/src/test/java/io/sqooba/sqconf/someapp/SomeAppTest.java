@@ -28,7 +28,7 @@ public class SomeAppTest {
     public void useOverWrites() {
         Map<String, String> ow = new HashMap<>();
         ow.put("some.string", "some.other.string");
-        JavaSqConf newConf = conf.withOverwrites(ow);
+        JavaSqConf newConf = conf.withOverrides(ow);
 
         String newVal = newConf.getString("some.string");
         assertEquals("some.other.string", newVal);
