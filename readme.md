@@ -68,6 +68,7 @@ here's a workaround, add this to your pom.xml:
 
 ## Change History
 
+- 0.4.1 remove dependency to option for the generic getter
 - 0.4.0 dependency version upgrades, better documentation.
 - 0.3.6 remove options from constructors so java wrapper works without scala standard lib
 

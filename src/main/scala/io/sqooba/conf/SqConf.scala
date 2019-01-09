@@ -1,10 +1,8 @@
 package io.sqooba.conf
 
-
 import java.io.File
 import java.time.Duration
 
-import scala.util.Properties
 import scala.collection.JavaConverters._
 
 import com.typesafe.config.Config
@@ -54,9 +52,9 @@ class SqConf(fileName: String = null,
     if (valueOverrides.contains(fullKey)) {
       DurationParser.parseDurationString(valueOverrides(fullKey), fullKey, "valueOverrides")
     } else {
-      Properties.envOrNone(keyAsEnv(fullKey)) match {
-        case Some(env) => DurationParser.parseDurationString(env, fullKey, "environmentVariable")
-        case None => conf.getDuration(fullKey)
+      System.getenv(keyAsEnv(fullKey)) match {
+        case null => conf.getDuration(fullKey)
+        case env: String => DurationParser.parseDurationString(env, fullKey, "environmentVariable")
       }
     }
   }
@@ -66,9 +64,9 @@ class SqConf(fileName: String = null,
     if (valueOverrides.contains(fullKey)) {
       converter(valueOverrides(fullKey))
     } else {
-      Properties.envOrNone(keyAsEnv(fullKey)) match {
-        case Some(env) => converter(env)
-        case None => converter(conf.getString(fullKey))
+      System.getenv(keyAsEnv(fullKey)) match {
+        case null => converter(conf.getString(fullKey))
+        case env: String => converter(env)
       }
     }
   }
@@ -118,9 +116,9 @@ class SqConf(fileName: String = null,
     if (valueOverrides.contains(fullKey)) {
       stringToT(valueOverrides(fullKey))
     } else {
-      Properties.envOrNone(keyAsEnv(fullKey)) match {
-        case Some(env) => stringToT(env)
-        case None => getListOf[T](fullKey, convert, cast)
+      System.getenv(keyAsEnv(fullKey)) match {
+        case null => getListOf[T](fullKey, convert, cast)
+        case env: String => stringToT(env)
       }
     }
   }
@@ -135,7 +133,6 @@ class SqConf(fileName: String = null,
 }
 
 object SqConf {
-
   def forFile(file: File): SqConf = {
     new SqConf(null, file, null, null, Map())
   }
