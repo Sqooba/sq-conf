@@ -2,15 +2,17 @@ package io.sqooba.conf
 
 import java.time.Duration
 
+import scala.util.Properties
+
 import org.scalatest.{FlatSpec, Matchers}
 
 class EnvOverwritesSpec extends FlatSpec with Matchers {
 
-	 // testIntListValue = [123, 23, 69]
 	 val conf = new SqConf
 
 	"read int from env" should "refer env variable to conf" in {
 		EnvUtil.setEnv(conf.keyAsEnv("some.testIntValue"), "50")
+    Properties.envOrNone(conf.keyAsEnv("some.testIntValue")) shouldBe defined
 		val prop = conf.getInt("some.testIntValue")
 		prop shouldBe a [java.lang.Integer]   // does not work with scala.Int for some reason
 		prop shouldBe 50
