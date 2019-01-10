@@ -71,7 +71,7 @@ here's a workaround, add this to your pom.xml:
 - get as java.util.Properties convenience
 
 ## Change History
-
+- 0.4.2 toProperties convenience method, transformer interface for java to transform from string to any time
 - 0.4.1 remove dependency to option for the generic getter
 - 0.4.0 dependency version upgrades, better documentation.
 - 0.3.6 remove options from constructors so java wrapper works without scala standard lib

@@ -16,6 +16,14 @@ class JavaSqConf(sqConf: SqConf) {
 
 	def get[T](key: String): T = sqConf.get[T](key)
 
+  def getWithTransformer[T](key: String, transformer: Transformer[T]): T = {
+    sqConf.getValueForKey(key, transformer.transform(_))
+  }
+
+  def getListWithTransformer[T](key: String, transformer: Transformer[T]): List[T] = {
+    sqConf.getListOf(key, transformer.transform(_), false)
+  }
+
 	def getIterable[T](key: String): java.lang.Iterable[T] = {
 		val list: List[T] = sqConf.getListOf[T](key)
 		import scala.collection.JavaConverters._
@@ -32,4 +40,6 @@ class JavaSqConf(sqConf: SqConf) {
     }).toMap
     sqConf.withOverrides(sMap).asJava()
   }
+
+	def toProperties: java.util.Properties = sqConf.toProperties()
 }
