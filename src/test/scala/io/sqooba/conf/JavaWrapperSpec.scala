@@ -47,11 +47,25 @@ class JavaWrapperSpec extends FlatSpec with Matchers {
 	}
 
 	"get list of ints" should "return valid java list" in {
-		//   testIntListValue = [123, 23, 69]
 		val listOf = javaWrapper.getListOf[Integer]("some.testIntListValue")
 		listOf.size() shouldBe 3
 		listOf.get(0) shouldBe 123
 		listOf.get(1) shouldBe 23
 		listOf.get(2) shouldBe 69
+	}
+
+	"get string as integer using transformer" should "give integer" in {
+		val transformer = new StringToIntTransformer
+		val result = javaWrapper.getWithTransformer[Integer]("some.testIntegerAsString", transformer)
+		result shouldBe a [java.lang.Integer]
+		result shouldBe 150
+	}
+
+	"get string as list of integers using transformer" should "give list of integers" in {
+		val transformer = new StringToIntTransformer
+		val result = javaWrapper.getListWithTransformer[Integer]("some.testIntegersAsStringList", transformer)
+		result.length shouldBe 3
+		result.head shouldBe 150
+    result.last shouldBe 350
 	}
 }

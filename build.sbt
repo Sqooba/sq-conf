@@ -1,6 +1,6 @@
 organization := "io.sqooba"
 scalaVersion := "2.12.8"
-version      := "0.4.1"
+version      := "0.4.2"
 name         := "sq-conf"
 
 crossScalaVersions := Seq("2.12.8", "2.11.12")

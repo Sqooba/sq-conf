@@ -2,11 +2,12 @@ package io.sqooba.conf
 
 import java.io.File
 import java.time.Duration
+import java.util.Properties
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
 import com.typesafe.scalalogging.LazyLogging
 
@@ -121,6 +122,16 @@ class SqConf(fileName: String = null,
         case env: String => stringToT(env)
       }
     }
+  }
+
+  def toProperties(defaults: Properties = null): Properties = {
+    val props = new Properties
+
+    conf.entrySet().forEach(keyValue => {
+      props.put(keyValue.getKey, keyValue.getValue.unwrapped().toString)
+    })
+
+    props
   }
 
   def getConfig(confPath: String): SqConf = {

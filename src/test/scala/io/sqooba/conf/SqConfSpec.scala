@@ -1,6 +1,7 @@
 package io.sqooba.conf
 
 import java.time.Duration
+import java.util.Properties
 
 import com.typesafe.config.ConfigException
 import org.scalatest.{FlatSpec, Matchers}

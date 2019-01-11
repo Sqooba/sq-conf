@@ -14,4 +14,4 @@ class DotEnvVariableSpec extends FlatSpec with Matchers {
 	}
 
 }
-// some cases parameters come as a map, sqconf does not work well with this
+// some cases parameters come as a map, sq-conf does not work well with this
