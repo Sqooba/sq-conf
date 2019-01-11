@@ -125,40 +125,12 @@ class SqConf(fileName: String = null,
   }
 
   def toProperties(defaults: Properties = null): Properties = {
-    /*
-    def toProps(m: mutable.Map[String, ConfigValue]): Properties = {
-      val props = new Properties()
-      m.foreach { case (key, confValue) =>
-        val value = if (confValue.valueType() == ConfigValueType.OBJECT) {
-          toProps(confValue.asInstanceOf[ConfigObject].asScala)
-        } else if (confValue.unwrapped == null) {
-          null
-        } else {
-          confValue.unwrapped.toString
-        }
-        println(s"key: $key, value: $value")
-        if (value != null) props.put(key, value)
-      }
-      props
-    }
-    toProps(conf.root().asScala)
-
-
-    conf.root().asScala.foreach {
-      case (key, confVal) => {
-        props.put(key, confVal.unwrapped().toString)
-      }
-    }
-    */
     val props = new Properties
 
-    println(props.getProperty("some.testBooleanValue"))
     conf.entrySet().forEach(keyValue => {
-        println(s"key: ${keyValue.getKey}, val: ${keyValue.getValue.unwrapped()}")
-        props.put(keyValue.getKey, keyValue.getValue.unwrapped().toString)
-      })
-    /*
-    */
+      props.put(keyValue.getKey, keyValue.getValue.unwrapped().toString)
+    })
+
     props
   }
 

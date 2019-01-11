@@ -50,6 +50,16 @@ SqConf also provides a java wrapper that returns java data types.
     javaWrapper.getString("some.testStringValue") // returns java.lang.String
 ```
 
+## Converting to Properties class
+Both native scala sqConf and the javaWrapper now have a convenience method to convert to Properties
+object.
+```
+    val asProperties: Properties = new SqConf().toProperties()
+	
+    javaWrapper.getInt("some.testIntValue") // returns java.lang.Integer
+    javaWrapper.getString("some.testStringValue") // returns java.lang.String
+```
+
 ## Getting started
 Add sqConf to your project, with sbt add this simple line:
 ```
@@ -71,7 +81,7 @@ here's a workaround, add this to your pom.xml:
 - get as java.util.Properties convenience
 
 ## Change History
-- 0.4.2 toProperties convenience method, transformer interface for java to transform from string to any time
+- 0.4.2 toProperties convenience method, transformer interface for java to transform from string to any type.
 - 0.4.1 remove dependency to option for the generic getter
 - 0.4.0 dependency version upgrades, better documentation.
 - 0.3.6 remove options from constructors so java wrapper works without scala standard lib
