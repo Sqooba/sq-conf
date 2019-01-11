@@ -77,8 +77,7 @@ here's a workaround, add this to your pom.xml:
 ```
 
 ## Future Plans
-- interface based java transformer for custom types
-- get as java.util.Properties convenience
+- to be decided
 
 ## Change History
 - 0.4.2 toProperties convenience method, transformer interface for java to transform from string to any type.
