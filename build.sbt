@@ -1,5 +1,5 @@
 organization := "io.sqooba"
-scalaVersion := "2.12.8"
+scalaVersion := "2.11.12"
 version      := "0.4.2"
 name         := "sq-conf"
 
@@ -16,6 +16,7 @@ libraryDependencies ++= Seq(
 excludeDependencies ++= Seq("org.slf4j" % "slf4j-log4j12", "log4j" % "log4j")
 
 testOptions in Test += Tests.Argument("-l", "ExternalSpec")
+parallelExecution := false
 
 lazy val External = config("ext").extend(Test)
 configs(External)

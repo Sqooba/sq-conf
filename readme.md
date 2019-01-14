@@ -72,7 +72,7 @@ here's a workaround, add this to your pom.xml:
     <dependency>
       <groupId>io.sqooba</groupId>
       <artifactId>sq-conf_2.12</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.2</version>
     </dependency>
 ```
 

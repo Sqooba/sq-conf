@@ -5,7 +5,6 @@ import java.time.Duration
 import java.util.Properties
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable
 
 import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
@@ -126,11 +125,9 @@ class SqConf(fileName: String = null,
 
   def toProperties(defaults: Properties = null): Properties = {
     val props = new Properties
-
-    conf.entrySet().forEach(keyValue => {
-      props.put(keyValue.getKey, keyValue.getValue.unwrapped().toString)
+    conf.entrySet().asScala.toList.foreach(keyVal => {
+      props.put(keyVal.getKey, keyVal.getValue.unwrapped().toString)
     })
-
     props
   }
 
