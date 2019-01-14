@@ -45,6 +45,7 @@ class SqConfSpec extends FlatSpec with Matchers {
   }
 
   "another conf with overwrites" should "have a different value" in {
+    EnvUtil.removeEnv(conf.keyAsEnv("some.testIntValue"))
     val prop1 = anotherConf.getInt("some.testIntValue")
     val prop2 = anotherConfWithOverrides.getInt("some.testIntValue")
     prop2 shouldBe 15
