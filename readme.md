@@ -63,7 +63,7 @@ object.
 ## Getting started
 Add sqConf to your project, with sbt add this simple line:
 ```
-    "io.sqooba" %% "sq-conf" % "0.4.2", 
+    libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.4.2" 
 ```
 
 And the whiny masochists using maven, please go get some professional help, you need it. Until meds kick in, 
