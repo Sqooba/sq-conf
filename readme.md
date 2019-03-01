@@ -66,8 +66,7 @@ Add sqConf to your project, with sbt add this simple line:
     libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.4.2" 
 ```
 
-And the whiny masochists using maven, please go get some professional help, you need it. Until meds kick in, 
-here's a workaround, add this to your pom.xml:
+Sq-conf works also with maven. Just add this to your pom.xml:
 ```
     <dependency>
       <groupId>io.sqooba</groupId>
