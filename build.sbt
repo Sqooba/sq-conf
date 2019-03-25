@@ -1,6 +1,5 @@
 organization := "io.sqooba"
 scalaVersion := "2.11.12"
-version      := "0.4.2"
 name         := "sq-conf"
 
 homepage := Some(url("https://github.com/Sqooba/sq-conf"))
@@ -43,17 +42,7 @@ publishTo := {
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
-/*
-publishTo := {
-  val realm = "Artifactory Realm"
-  val artBaseUrl = "https://artifactory-v2.sqooba.io/artifactory"
-  if (isSnapshot.value) {
-    Some(realm at s"$artBaseUrl/libs-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
-  } else {
-    Some(realm at s"$artBaseUrl/libs-release-local")
-  }
-}
-*/
+
 scmInfo := Some(
   ScmInfo(
     url("https://github.com/Sqooba/sq-conf"),
