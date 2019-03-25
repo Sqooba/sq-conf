@@ -1,7 +1,10 @@
 organization := "io.sqooba"
 scalaVersion := "2.11.12"
-version      := "0.4."
+version      := "0.4.2"
 name         := "sq-conf"
+
+homepage := Some(url("https://github.com/Sqooba/sq-conf"))
+licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 crossScalaVersions := Seq("2.12.8", "2.11.12")
 
@@ -29,6 +32,18 @@ val artPass = sys.env.get("ARTIFACTORY_CREDS_PSW").getOrElse("")
 
 credentials += Credentials("Artifactory Realm", "artifactory-v2.sqooba.io", artUser, artPass)
 
+
+publishMavenStyle := true
+publishArtifact in Test := false
+pomIncludeRepository := { _ => false }
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+/*
 publishTo := {
   val realm = "Artifactory Realm"
   val artBaseUrl = "https://artifactory-v2.sqooba.io/artifactory"
@@ -38,3 +53,13 @@ publishTo := {
     Some(realm at s"$artBaseUrl/libs-release-local")
   }
 }
+*/
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/Sqooba/sq-conf"),
+    "scm:git@github.com:Sqooba/sq-conf.git"
+  )
+)
+developers := List(
+  Developer("pietrotull", "Pietari Kettunen", "kettunen@gmail.com", url("https://github.com/pietrotull"))
+)
