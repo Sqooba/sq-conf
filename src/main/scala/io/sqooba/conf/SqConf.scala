@@ -137,11 +137,11 @@ class SqConf(fileName: String = null,
 
 object SqConf {
   def forFile(file: File): SqConf = {
-    new SqConf(null, file, null, null, Map())
+    new SqConf(null, file, null, null)
   }
 
   def forConfig(config: Config): SqConf = {
-    new SqConf(null, null, config, null, Map())
+    new SqConf(null, null, config, null)
   }
 
   def forFilename(fileName: String): SqConf = {
