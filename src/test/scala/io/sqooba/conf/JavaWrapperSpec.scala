@@ -1,5 +1,7 @@
 package io.sqooba.conf
 
+import java.util
+
 import org.scalatest.{FlatSpec, Matchers}
 
 class JavaWrapperSpec extends FlatSpec with Matchers {
@@ -7,7 +9,7 @@ class JavaWrapperSpec extends FlatSpec with Matchers {
 	val javaWrapper = new SqConf().asJava()
 
 	"java wrapper" should "return java string" in {
-		val prop: java.lang.String = javaWrapper.getString("some.testStringValue")
+		val prop  = javaWrapper.getString("some.testStringValue")
 		prop shouldBe a [java.lang.String]
 	}
 
@@ -67,5 +69,12 @@ class JavaWrapperSpec extends FlatSpec with Matchers {
 		result.length shouldBe 3
 		result.head shouldBe 150
     result.last shouldBe 350
+	}
+
+	"java wrapper with overrides" should "give overide values" in {
+		val or: java.util.Map[java.lang.String, java.lang.String] = new util.HashMap[String, String]()
+    or.put("some.testStringValue", "new value")
+    val javaOrWrapper = new SqConf().asJava().withOverrides(or)
+    javaOrWrapper.getString("some.testStringValue") shouldBe "new value"
 	}
 }

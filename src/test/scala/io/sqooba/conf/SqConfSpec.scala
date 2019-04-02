@@ -39,6 +39,12 @@ class SqConfSpec extends FlatSpec with Matchers {
     prop shouldBe BigInt(123456789)
   }
 
+  "read long from conf" should "get a long from conf" in {
+    val prop = conf.getLong("some.testLong2Value")
+    prop shouldBe a [java.lang.Long]
+    prop shouldBe 9223372036854775807L
+  }
+
   "another conf" should "have value" in {
     val prop = anotherConf.getBoolean("this.has.conf")
     prop shouldBe true

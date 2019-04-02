@@ -9,6 +9,7 @@ class ValueOverridesSpec extends FlatSpec with Matchers {
   val overrideMap = Map("some.testIntValue" -> "15",
     "some.testStringValue" -> "overridenstring",
     "some.testBooleanValue" -> "false",
+    "some.testDurationValue" -> "10 s",
     "some.testStringListValue" -> "first,second,third",
     "some.durationListValue" -> "10s, 10m")
 
@@ -24,6 +25,10 @@ class ValueOverridesSpec extends FlatSpec with Matchers {
 
   "overwritten boolean" should "return value that matches the one in the map" in {
     sqConf.getBoolean("some.testBooleanValue") shouldBe false
+  }
+
+  "overriden duraion" should "" in {
+    sqConf.getDuration("some.testDurationValue") shouldBe Duration.ofSeconds(10)
   }
 
   "overwritten duration list" should "return duration that matches the one in the map" in {
