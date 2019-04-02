@@ -15,8 +15,7 @@ class PropertiesSpec extends FlatSpec with Matchers {
 
     props shouldBe a [Properties]
     val prop = props.getProperty("some.testStringValue")
-
-    stringVal shouldBe props.getProperty("some.testStringValue")
+    stringVal shouldBe prop
   }
 
 }

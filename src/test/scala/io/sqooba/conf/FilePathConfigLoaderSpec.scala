@@ -7,7 +7,6 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class FilePathConfigLoaderSpec extends FlatSpec with Matchers {
 
-
 	"load from path" should "work" in {
 		val f = new File("src/test/resources/another.conf")
 		f.exists() shouldBe true
@@ -22,7 +21,6 @@ class FilePathConfigLoaderSpec extends FlatSpec with Matchers {
 		val conf = ConfigFactory.parseFile(f)
 
 		val sq = SqConf.forConfig(conf)
-
 		sq.getBoolean("this.has.conf") shouldBe true
 	}
 }

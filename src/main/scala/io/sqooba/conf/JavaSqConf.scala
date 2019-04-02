@@ -42,4 +42,8 @@ class JavaSqConf(sqConf: SqConf) {
   }
 
   def toProperties: java.util.Properties = sqConf.toProperties()
+
+  def getConfig(path: String): JavaSqConf = {
+    sqConf.getConfig(path).asJava()
+  }
 }

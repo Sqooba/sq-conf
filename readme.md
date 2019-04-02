@@ -1,9 +1,10 @@
-# Sq-Conf
+# Sq-Conf - unified interface for all your configuration needs
 
-SqConf is a thin wrapper for typesafe-config library ("com.typesafe.config" % "1.3.3") that was mainly 
-created to make configuring applications running on containers easier. Mainly
-overriding values from environment variables is made easier, no need to specifically define this in config.
-Also key does not need to exist in the config in the first place. 
+SqConf is unified interface for all your configuration needs. Essentially it's a thin wrapper for 
+typesafe-config library ("com.typesafe.config" % "1.3.3") that was mainly created to make 
+configuring applications running on containers easier. Mainly overriding values from environment 
+variables is made easier, no need to specifically define this in config. Also key does not need 
+to exist in the config in the first place. 
 
 ```
     // reads application.conf
