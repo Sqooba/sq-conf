@@ -90,12 +90,7 @@ class SqConf(fileName: String = null,
     })
   }
 
-  def getListOf[T](key: String): List[T] = {
-    val l = conf.getAnyRefList(key)
-    l.toArray.map(x => {
-      x.asInstanceOf[T]
-    }).toList
-  }
+  def getListOf[T](key: String): List[T] = getListOf[T](key, null, true)
 
   def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
