@@ -7,6 +7,7 @@ object EnvUtil {
 
   val field: Field = System.getenv().getClass.getDeclaredField("m")
   field.setAccessible(true)
+
   val map: util.Map[String, String] = field.get(System.getenv()).asInstanceOf[java.util.Map[java.lang.String, java.lang.String]]
 
   def removeEnv(key: String): String = map.remove(key)
