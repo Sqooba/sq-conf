@@ -99,6 +99,22 @@ class SqConfSpec extends FlatSpec with Matchers {
     thrown.getMessage should include ("No configuration setting found for key")
   }
 
+  "get list of doubles" should "give a correct list" in {
+    val res = conf.getListOfDouble("some.testDoubleListValue")
+
+    res.length shouldBe 3
+    compare(res(0), 10.5, 0.00001) shouldBe true
+    compare(res(2), 999.999, 0.00001) shouldBe true
+  }
+
+  "get list of doubles as strings" should "give a correct list" in {
+    val res = conf.getListOfDouble("some.testDoubleListAsStringList")
+
+    res.length shouldBe 3
+    compare(res(0), 10.5, 0.00001) shouldBe true
+    compare(res(2), 999.999, 0.00001) shouldBe true
+  }
+
   "get duration list" should "give duration" in {
     EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationListValue"))
     val duration: List[Duration] = conf.getListOfDuration("some.testDurationListValue")
@@ -107,5 +123,9 @@ class SqConfSpec extends FlatSpec with Matchers {
     val tenMinDuration: Duration = Duration.ofMinutes(10)
 
     firstDuration shouldBe tenMinDuration
+  }
+
+  def compare(x: Double, y: Double, precision: Double) = {
+    if ((x - y).abs < precision) true else false
   }
 }

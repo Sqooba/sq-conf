@@ -94,7 +94,7 @@ class SqConf(fileName: String = null,
 
   def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
-  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, str => str.trim.toDouble)
+  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, str => str.trim.toDouble, false)
 
   def getListOfString(key: String): List[String] = getListOfWithConversion(key, str => str.trim)
 
@@ -105,8 +105,11 @@ class SqConf(fileName: String = null,
 
   def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = true): List[T] = {
     val fullKey = buildKey(key)
-
-    def stringToT(string: String): List[T] = string.split(',').map(x => convert(x)).toList
+    println("going here:")
+    def stringToT(string: String): List[T] = string.split(',').map(x => {
+      println(s"x:$x, con: ${convert(x)}")
+      convert(x)
+    }).toList
 
     if (valueOverrides.contains(fullKey)) {
       stringToT(valueOverrides(fullKey))

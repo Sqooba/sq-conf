@@ -1,6 +1,7 @@
 package io.sqooba.conf
 
 import java.util
+import java.util.Properties
 
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -71,10 +72,22 @@ class JavaWrapperSpec extends FlatSpec with Matchers {
     result.last shouldBe 350
 	}
 
-	"java wrapper with overrides" should "give overide values" in {
+	"java wrapper with overrides" should "give override values" in {
 		val or: java.util.Map[java.lang.String, java.lang.String] = new util.HashMap[String, String]()
     or.put("some.testStringValue", "new value")
     val javaOrWrapper = new SqConf().asJava().withOverrides(or)
     javaOrWrapper.getString("some.testStringValue") shouldBe "new value"
 	}
+
+  "to Properties" should "give properties object" in {
+    val asProp = javaWrapper.toProperties
+    asProp shouldBe a [Properties]
+    asProp.getProperty("some.testStringValue") shouldBe "string thing"
+  }
+
+  "get original conf" should "give original object" in {
+    val conf = javaWrapper.getSqConf
+    conf shouldBe a [SqConf]
+    SqConf.default().conf.hashCode() shouldBe conf.conf.hashCode()
+  }
 }
