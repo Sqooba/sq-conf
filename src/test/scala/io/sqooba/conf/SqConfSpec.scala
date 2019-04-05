@@ -125,6 +125,20 @@ class SqConfSpec extends FlatSpec with Matchers {
     firstDuration shouldBe tenMinDuration
   }
 
+  "get long from strings" should "give a proper long list" in {
+    val loooongs: List[Long] = conf.getListOfLong("some.testLongListAsStringValue")
+    loooongs.size shouldBe 3
+    loooongs(0) shouldBe a [java.lang.Long]
+  }
+
+  "get ints from strings" should "give a proper int list" in {
+    val loooongs: List[Int] = conf.getListOfInt("some.testIntListAsStringValue")
+    loooongs.size shouldBe 3
+
+    loooongs(0) shouldBe a [java.lang.Integer]
+  }
+
+
   def compare(x: Double, y: Double, precision: Double) = {
     if ((x - y).abs < precision) true else false
   }

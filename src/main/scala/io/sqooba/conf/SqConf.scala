@@ -94,20 +94,24 @@ class SqConf(fileName: String = null,
 
   def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
-  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, str => str.trim.toDouble, false)
+  def getListOfDouble(key: String): List[Double] =
+    getListOfWithConversion(key, str => str.trim.toDouble)
+
+  def getListOfLong(key: String): List[Long] =
+    getListOfWithConversion(key, str => str.trim.toLong)
 
   def getListOfString(key: String): List[String] = getListOfWithConversion(key, str => str.trim)
 
-  def getListOfBoolean(key: String): List[Boolean] = getListOfWithConversion(key, str => str.trim.toBoolean)
+  def getListOfBoolean(key: String): List[Boolean] =
+    getListOfWithConversion(key, str => str.trim.toBoolean)
 
   def getListOfDuration(key: String): List[Duration] = getListOfWithConversion[Duration](key, str =>
     DurationParser.parseDurationString(str, key, "listOfDuration"), cast = false)
 
-  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = true): List[T] = {
+  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = false): List[T] = {
     val fullKey = buildKey(key)
-    println("going here:")
+
     def stringToT(string: String): List[T] = string.split(',').map(x => {
-      println(s"x:$x, con: ${convert(x)}")
       convert(x)
     }).toList
 
