@@ -89,3 +89,4 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 - 0.4.0 Dependency version upgrades, better documentation.
 - 0.3.6 Remove options from constructors so java wrapper works without scala standard lib.
 
+[![Coverage Status](https://coveralls.io/repos/github/Sqooba/sq-conf/badge.svg?branch=coverall-test)](https://coveralls.io/github/Sqooba/sq-conf?branch=coverall-test)
