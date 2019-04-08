@@ -10,7 +10,7 @@ jdk:
 branches:
   only:
   - master
-  - coverall-test
+  - 0.5.0
 
 cache:
   directories:
