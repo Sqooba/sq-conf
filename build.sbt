@@ -1,9 +1,9 @@
-organization := "io.sqooba"
-scalaVersion := "2.11.12"
-name         := "sq-conf"
-description := "Unified configuration interface."
-homepage := Some(url("https://github.com/Sqooba/sq-conf"))
-licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
+organization  := "io.sqooba"
+scalaVersion  := "2.11.12"
+name          := "sq-conf"
+description   := "Unified configuration interface."
+homepage      := Some(url("https://github.com/Sqooba/sq-conf"))
+licenses      := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 crossScalaVersions := Seq("2.12.8", "2.11.12")
 
@@ -18,12 +18,12 @@ libraryDependencies ++= Seq(
 excludeDependencies ++= Seq("org.slf4j" % "slf4j-log4j12", "log4j" % "log4j")
 
 
-coverageHighlighting := true
-publishMavenStyle := true
+coverageHighlighting    := true
+publishMavenStyle       := true
 publishArtifact in Test := false
-pomIncludeRepository := { _ => false }
+pomIncludeRepository    := { _ => false }
 
-publishTo := Some(sonatypeDefaultResolver.value)
+publishTo               := Some(sonatypeDefaultResolver.value)
 
 scmInfo := Some(
   ScmInfo(
