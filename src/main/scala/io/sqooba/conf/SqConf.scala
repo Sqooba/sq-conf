@@ -5,6 +5,7 @@ import java.time.Duration
 import java.util.Properties
 
 import scala.collection.JavaConverters._
+import scala.reflect.ClassTag
 
 import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
@@ -108,7 +109,8 @@ class SqConf(fileName: String = null,
   def getListOfDuration(key: String): List[Duration] = getListOfWithConversion[Duration](key, str =>
     DurationParser.parseDurationString(str, key, "listOfDuration"), cast = false)
 
-  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = false): List[T] = {
+
+  def getListOfWithConversion[T: ClassTag](key: String, convert: String => T, cast: Boolean = false): List[T] = {
     val fullKey = buildKey(key)
 
     def stringToT(string: String): List[T] = string.split(',').map(x => {

@@ -72,6 +72,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
     val testVal = "this_is_test_val"
     EnvUtil.setEnv(conf.keyAsEnv(testKey), testVal)
     conf.getString(testKey) shouldBe testVal
+		EnvUtil.removeEnv(conf.keyAsEnv(testKey))
   }
 
 	"read duration from env" should "refer env variable to conf" in {
