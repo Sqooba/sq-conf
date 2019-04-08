@@ -83,9 +83,9 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 - to be decided
 
 ## Change History
-- 0.5.0 add get config method to java wrapper, deployed first snapshot to sonatype.
-- 0.4.2 toProperties convenience method, transformer interface for java to transform from string to any type.
-- 0.4.1 remove dependency to option for the generic getter
-- 0.4.0 dependency version upgrades, better documentation.
-- 0.3.6 remove options from constructors so java wrapper works without scala standard lib
+- 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
+- 0.4.2 New toProperties convenience method, transformer interface for java to transform from string to any type.
+- 0.4.1 Remove dependency to option for the generic getter.
+- 0.4.0 Dependency version upgrades, better documentation.
+- 0.3.6 Remove options from constructors so java wrapper works without scala standard lib.
 
