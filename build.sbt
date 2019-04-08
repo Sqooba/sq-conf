@@ -1,7 +1,7 @@
 organization := "io.sqooba"
 scalaVersion := "2.11.12"
 name         := "sq-conf"
-
+description := "Unified configuration interface."
 homepage := Some(url("https://github.com/Sqooba/sq-conf"))
 licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
@@ -17,27 +17,13 @@ libraryDependencies ++= Seq(
 
 excludeDependencies ++= Seq("org.slf4j" % "slf4j-log4j12", "log4j" % "log4j")
 
-testOptions in Test += Tests.Argument("-l", "ExternalSpec")
-parallelExecution := false
-
-lazy val External = config("ext").extend(Test)
-configs(External)
-inConfig(External)(Defaults.testTasks)
-testOptions in External -= Tests.Argument("-l", "ExternalSpec")
-testOptions in External += Tests.Argument("-n", "ExternalSpec")
 
 coverageHighlighting := true
-
 publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-}
+
+publishTo := Some(sonatypeDefaultResolver.value)
 
 scmInfo := Some(
   ScmInfo(
