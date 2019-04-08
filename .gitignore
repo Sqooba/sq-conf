@@ -7,3 +7,4 @@ target
 test.sh
 .iml
 token-coverall.txt
+.coveralls.yml
