@@ -1,5 +1,9 @@
 # Sq-Conf - unified interface for all your configuration needs
 
+[![Build Status](https://travis-ci.org/Sqooba/sq-conf.svg?branch=master)](https://travis-ci.org/Sqooba/sq-conf/)
+
+## Description
+
 SqConf is unified interface for all your configuration needs. Essentially it's a thin wrapper for 
 [typesafe-config](https://github.com/lightbend/config) library ("com.typesafe.config" % "1.3.3") 
 that was mainly created to make configuring applications running on containers easier. 
