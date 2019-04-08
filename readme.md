@@ -1,6 +1,8 @@
 # Sq-Conf - unified interface for all your configuration needs
 
-[![Build Status](https://travis-ci.org/Sqooba/sq-conf.svg?branch=master)](https://travis-ci.org/Sqooba/sq-conf/) [![Coverage Status](https://coveralls.io/repos/github/Sqooba/sq-conf/badge.svg?branch=coverall-test)](https://coveralls.io/github/Sqooba/sq-conf?branch=coverall-test)
+[![Build Status](https://travis-ci.org/Sqooba/sq-conf.svg?branch=master)](https://travis-ci.org/Sqooba/sq-conf/) 
+[![Coverage Status](https://coveralls.io/repos/github/Sqooba/sq-conf/badge.svg?branch=coverall-test)](https://coveralls.io/github/Sqooba/sq-conf?branch=coverall-test)
+[![Maven](https://img.shields.io/maven-central/v/io.sqooba/sq-conf_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/io.sqooba/sq-conf_2.11)
 
 ## Description
 
