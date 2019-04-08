@@ -90,28 +90,30 @@ class SqConf(fileName: String = null,
     })
   }
 
-  def getListOf[T](key: String): List[T] = {
-    val l = conf.getAnyRefList(key)
-    l.toArray.map(x => {
-      x.asInstanceOf[T]
-    }).toList
-  }
+  def getListOf[T](key: String): List[T] = getListOf[T](key, null, true)
 
   def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
-  def getListOfDouble(key: String): List[Double] = getListOfWithConversion(key, str => str.trim.toDouble)
+  def getListOfDouble(key: String): List[Double] =
+    getListOfWithConversion(key, str => str.trim.toDouble)
+
+  def getListOfLong(key: String): List[Long] =
+    getListOfWithConversion(key, str => str.trim.toLong)
 
   def getListOfString(key: String): List[String] = getListOfWithConversion(key, str => str.trim)
 
-  def getListOfBoolean(key: String): List[Boolean] = getListOfWithConversion(key, str => str.trim.toBoolean)
+  def getListOfBoolean(key: String): List[Boolean] =
+    getListOfWithConversion(key, str => str.trim.toBoolean)
 
   def getListOfDuration(key: String): List[Duration] = getListOfWithConversion[Duration](key, str =>
     DurationParser.parseDurationString(str, key, "listOfDuration"), cast = false)
 
-  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = true): List[T] = {
+  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = false): List[T] = {
     val fullKey = buildKey(key)
 
-    def stringToT(string: String): List[T] = string.split(',').map(x => convert(x)).toList
+    def stringToT(string: String): List[T] = string.split(',').map(x => {
+      convert(x)
+    }).toList
 
     if (valueOverrides.contains(fullKey)) {
       stringToT(valueOverrides(fullKey))
@@ -142,11 +144,11 @@ class SqConf(fileName: String = null,
 
 object SqConf {
   def forFile(file: File): SqConf = {
-    new SqConf(null, file, null, null, Map())
+    new SqConf(null, file, null, null)
   }
 
   def forConfig(config: Config): SqConf = {
-    new SqConf(null, null, config, null, Map())
+    new SqConf(null, null, config, null)
   }
 
   def forFilename(fileName: String): SqConf = {

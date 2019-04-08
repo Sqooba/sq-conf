@@ -6,3 +6,5 @@ target
 .idea
 test.sh
 .iml
+token-coverall.txt
+.coveralls.yml

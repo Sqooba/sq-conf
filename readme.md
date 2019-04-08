@@ -3,9 +3,8 @@
 SqConf is unified interface for all your configuration needs. Essentially it's a thin wrapper for 
 [typesafe-config](https://github.com/lightbend/config) library ("com.typesafe.config" % "1.3.3") 
 that was mainly created to make configuring applications running on containers easier. 
-Mainly overriding values from environment 
-variables is made easier, no need to specifically define this in config. Also key does not need 
-to exist in the config in the first place. 
+Mainly overriding values from environment variables is made easier, no need to specifically 
+define this in config. Also key does not need to exist in the config in the first place. 
 
 ```
     // reads application.conf
@@ -63,6 +62,9 @@ object.
 ```
 
 ## Getting started
+Sq-conf is cross compiled for scala 2.11 and 2.12. For the latest of the latest, sq-conf snapshots 
+are available in sonatype repo: 
+[sonatype-snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/sqooba/). 
 Add sqConf to your project, with sbt add this simple line:
 ```
     libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.4.2" 
@@ -81,8 +83,10 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 - to be decided
 
 ## Change History
-- 0.4.2 toProperties convenience method, transformer interface for java to transform from string to any type.
-- 0.4.1 remove dependency to option for the generic getter
-- 0.4.0 dependency version upgrades, better documentation.
-- 0.3.6 remove options from constructors so java wrapper works without scala standard lib
+- 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
+- 0.4.2 New toProperties convenience method, transformer interface for java to transform from string to any type.
+- 0.4.1 Remove dependency to option for the generic getter.
+- 0.4.0 Dependency version upgrades, better documentation.
+- 0.3.6 Remove options from constructors so java wrapper works without scala standard lib.
 
+[![Coverage Status](https://coveralls.io/repos/github/Sqooba/sq-conf/badge.svg?branch=coverall-test)](https://coveralls.io/github/Sqooba/sq-conf?branch=coverall-test)

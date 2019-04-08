@@ -26,6 +26,8 @@ inConfig(External)(Defaults.testTasks)
 testOptions in External -= Tests.Argument("-l", "ExternalSpec")
 testOptions in External += Tests.Argument("-n", "ExternalSpec")
 
+coverageHighlighting := true
+
 publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }

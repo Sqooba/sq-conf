@@ -6,7 +6,7 @@ import scala.util.Properties
 
 import org.scalatest.{FlatSpec, Matchers}
 
-class EnvOverwritesSpec extends FlatSpec with Matchers {
+class EnvOverridesSpec extends FlatSpec with Matchers {
 
 	 val conf = new SqConf
 
@@ -53,6 +53,7 @@ class EnvOverwritesSpec extends FlatSpec with Matchers {
 		booleanArray should contain allOf (true, false)
 		EnvUtil.removeEnv(conf.keyAsEnv("some.testBooleanListValue"))
 	}
+
 	"read duration type array" should "give a list of duration" in {
 		// import scala.concurrent.duration._
 		EnvUtil.setEnv(conf.keyAsEnv("some.testDurationListValue"), "10m, 5s, 1h")
@@ -72,4 +73,15 @@ class EnvOverwritesSpec extends FlatSpec with Matchers {
     EnvUtil.setEnv(conf.keyAsEnv(testKey), testVal)
     conf.getString(testKey) shouldBe testVal
   }
+
+	"read duration from env" should "refer env variable to conf" in {
+		EnvUtil.setEnv(conf.keyAsEnv("some.testDurationValue"), "20s")
+		Properties.envOrNone(conf.keyAsEnv("some.testDurationValue")) shouldBe defined
+		val prop = conf.getDuration("some.testDurationValue")
+
+		prop shouldBe a [java.time.Duration]
+		prop.getSeconds shouldBe 20
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationValue"))
+	}
+
 }
