@@ -3,9 +3,8 @@
 SqConf is unified interface for all your configuration needs. Essentially it's a thin wrapper for 
 [typesafe-config](https://github.com/lightbend/config) library ("com.typesafe.config" % "1.3.3") 
 that was mainly created to make configuring applications running on containers easier. 
-Mainly overriding values from environment 
-variables is made easier, no need to specifically define this in config. Also key does not need 
-to exist in the config in the first place. 
+Mainly overriding values from environment variables is made easier, no need to specifically 
+define this in config. Also key does not need to exist in the config in the first place. 
 
 ```
     // reads application.conf
@@ -63,6 +62,9 @@ object.
 ```
 
 ## Getting started
+Sq-conf is cross compiled for scala 2.11 and 2.12. For the latest of the latest, sq-conf snapshots 
+are available in sonatype repo: 
+[sonatype-snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/sqooba/). 
 Add sqConf to your project, with sbt add this simple line:
 ```
     libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.4.2" 
