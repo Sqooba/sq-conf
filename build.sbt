@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
 
 excludeDependencies ++= Seq("org.slf4j" % "slf4j-log4j12", "log4j" % "log4j")
 
+parallelExecution in Test := false
 
 coverageHighlighting    := true
 publishMavenStyle       := true
