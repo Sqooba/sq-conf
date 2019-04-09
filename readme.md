@@ -87,6 +87,7 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 
 ## Future Plans
 - scala 2.13 support
+- test more complex type conversions from app.conf, also with java transformers
 
 ## Change History
 - 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
