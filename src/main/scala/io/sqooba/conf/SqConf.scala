@@ -75,11 +75,14 @@ class SqConf(fileName: String = null,
     value
   }
 
-  def getListOfValuesAccordingOrderOfOfPreference[T](key: String, converter: String => T): List[T] = {
+  def getListOfValuesAccordingOrderOfPreference[T](key: String, converter: String => T): List[T] = {
+    println(orderOfPreference)
     var values: List[T] = List()
     orderOfPreference.takeWhile(oop => {
+      println(oop)
       values = getListOfValuesForOrderOfOfPreference[T](key, oop, converter)
-      values == null
+      println(values)
+      values.isEmpty
     })
     values
   }
@@ -94,8 +97,8 @@ class SqConf(fileName: String = null,
     oop match {
       case OrderOfPreference.ENV_VARIABLE =>
         System.getenv(keyAsEnv(fullKey)) match {
-          case null => getListOf[T](fullKey, converter, false)
-          case env => stringToT(valueOverrides(fullKey))
+          case null => List()
+          case env => stringToT(env)
         }
       case OrderOfPreference.CONF_FIlE => getListOf[T](fullKey, converter, false)
       case OrderOfPreference.VALUE_OVERRIDES => {
@@ -149,22 +152,22 @@ class SqConf(fileName: String = null,
 
   def getListOf[T](key: String): List[T] = getListOf[T](key, null, cast = true)
 
-  def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
+  def getListOfInt(key: String): List[Int] = getListOfValuesAccordingOrderOfPreference[Int](key, str => str.trim.toInt)
 
   def getListOfDouble(key: String): List[Double] =
-    getListOfWithConversion(key, str => str.trim.toDouble)
+    getListOfValuesAccordingOrderOfPreference[Double](key, str => str.trim.toDouble)
 
   def getListOfLong(key: String): List[Long] =
-    getListOfWithConversion(key, str => str.trim.toLong)
+    getListOfValuesAccordingOrderOfPreference[Long](key, str => str.trim.toLong)
 
-  def getListOfString(key: String): List[String] = getListOfWithConversion(key, str => str.trim)
+  def getListOfString(key: String): List[String] = getListOfValuesAccordingOrderOfPreference[String](key, str => str.trim)
 
   def getListOfBoolean(key: String): List[Boolean] =
-    getListOfWithConversion(key, str => str.trim.toBoolean)
+    getListOfValuesAccordingOrderOfPreference[Boolean](key, str => str.trim.toBoolean)
 
-  def getListOfDuration(key: String): List[Duration] = getListOfWithConversion[Duration](key, str =>
-    DurationParser.parseDurationString(str, key, "listOfDuration"), cast = false)
-
+  def getListOfDuration(key: String): List[Duration] =
+    getListOfValuesAccordingOrderOfPreference[Duration](key, str => DurationParser.parseDurationString(str, key, "listOfDuration"))
+  /*
   def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = false): List[T] = {
     val fullKey = buildKey(key)
 
@@ -181,7 +184,7 @@ class SqConf(fileName: String = null,
       }
     }
   }
-
+*/
   def toProperties(defaults: Properties = null): Properties = {
     val props = new Properties
     conf.entrySet().asScala.toList.foreach(keyVal => {

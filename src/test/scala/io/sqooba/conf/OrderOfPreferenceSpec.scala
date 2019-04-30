@@ -52,7 +52,7 @@ class OrderOfPreferenceSpec extends FlatSpec with Matchers {
 
   "list of items" should "be given according to order of preference" in {
     val conf = new SqConf().withOverrides(Map("subConf.intList" -> "5,6,7"))
-    val res = conf.getListOfValuesAccordingOrderOfOfPreference[Int]("subConf.intList", ((st: String) => st.toInt))
+    val res = conf.getListOfValuesAccordingOrderOfPreference[Int]("subConf.intList", ((st: String) => st.toInt))
 
     res shouldBe List(5,6,7)
     res shouldBe conf.getListOfInt("subConf.intList")
@@ -60,7 +60,7 @@ class OrderOfPreferenceSpec extends FlatSpec with Matchers {
 
   it should "be given according to order of preference when not default, file is higher than overrides" in {
     val conf = new SqConf().withOverrides(Map("subConf.intList" -> "5,6,7")).configureOrder(oop)
-    val res = conf.getListOfValuesAccordingOrderOfOfPreference[Int]("subConf.intList", ((st: String) => st.toInt))
+    val res = conf.getListOfValuesAccordingOrderOfPreference[Int]("subConf.intList", ((st: String) => st.toInt))
 
     res shouldBe List(1,2,3)
     res shouldBe conf.getListOfInt("subConf.intList")
