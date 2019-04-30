@@ -60,10 +60,6 @@ class SqConf(fileName: String = null,
   }
 
   def getValueForKey[T](key: String, converter: String => T): T = {
-
-    println(s"prefix: $prefix")
-    println(s"overrides: $valueOverrides")
-
     val fullKey = buildKey(key)
     if (valueOverrides.contains(fullKey)) {
       converter(valueOverrides(fullKey))
@@ -137,12 +133,20 @@ class SqConf(fileName: String = null,
     props
   }
 
-  def getConfig(confPath: String): SqConf = {
+  def getConfig(confPath: String): SqConf =
     new SqConf(null, null, config, confPath, valueOverrides)
-  }
 
-  def withOverrides(overrides: Map[String, String]): SqConf = {
-    new SqConf(null, null, config, prefix, overrides)
+  def withOverrides(overrides: Map[String, String]): SqConf =
+    new SqConf(null, null, config, prefix, appendPrefixToOverridesIfNecessary(prefix, overrides))
+
+  def appendPrefixToOverridesIfNecessary(prefix: String, overrides: Map[String, String]): Map[String, String] = {
+    if (prefix == null || overrides.head._1.contains(prefix)) {
+      overrides
+    } else {
+      overrides.map(kv => {
+        (s"$prefix.${kv._1}", kv._2)
+      })
+    }
   }
 }
 

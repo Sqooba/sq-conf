@@ -23,4 +23,10 @@ class SubConfValueOverridesSpec extends FlatSpec with Matchers {
     val conf = SqConf.default().withOverrides(Map("subConf.root" -> "newRoot")).getConfig("subConf")
     conf.getString("root") shouldBe "newRoot"
   }
+
+  "value overrides" should "append prefix" in {
+    val conf = SqConf.default().getConfig("subConf").withOverrides(Map("root" -> "newRoot"))
+    conf.getString("root") shouldBe "newRoot"
+  }
+
 }
