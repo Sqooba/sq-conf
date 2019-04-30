@@ -76,12 +76,9 @@ class SqConf(fileName: String = null,
   }
 
   def getListOfValuesAccordingOrderOfPreference[T](key: String, converter: String => T): List[T] = {
-    println(orderOfPreference)
     var values: List[T] = List()
     orderOfPreference.takeWhile(oop => {
-      println(oop)
       values = getListOfValuesForOrderOfOfPreference[T](key, oop, converter)
-      println(values)
       values.isEmpty
     })
     values
@@ -167,24 +164,7 @@ class SqConf(fileName: String = null,
 
   def getListOfDuration(key: String): List[Duration] =
     getListOfValuesAccordingOrderOfPreference[Duration](key, str => DurationParser.parseDurationString(str, key, "listOfDuration"))
-  /*
-  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = false): List[T] = {
-    val fullKey = buildKey(key)
 
-    def stringToT(string: String): List[T] = string.split(',').map(x => {
-      convert(x)
-    }).toList
-
-    if (valueOverrides.contains(fullKey)) {
-      stringToT(valueOverrides(fullKey))
-    } else {
-      System.getenv(keyAsEnv(fullKey)) match {
-        case null => getListOf[T](fullKey, convert, cast)
-        case env: String => stringToT(env)
-      }
-    }
-  }
-*/
   def toProperties(defaults: Properties = null): Properties = {
     val props = new Properties
     conf.entrySet().asScala.toList.foreach(keyVal => {
