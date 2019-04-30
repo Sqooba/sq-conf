@@ -10,14 +10,12 @@ jdk:
 branches:
   only:
   - master
-  - 0.5.2
+  - 0.5.1
 
 cache:
   directories:
   - $HOME/.ivy2/cache
   - $HOME/.sbt/boot
-  - $HOME/.coursier
-
 
 script: "sbt clean coverage test"
 after_success: "sbt coverageReport coveralls"

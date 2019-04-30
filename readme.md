@@ -68,7 +68,7 @@ object.
 ```
 
 ## Getting started
-Sq-conf is cross compiled for scala 2.11 and 2.12. For the latest of the latest, sq-conf snapshots 
+Sq-conf is cross compiled for scala 2.11, 2.12 and 2.13. For the latest of the latest, sq-conf snapshots 
 are available in sonatype repo: 
 [sonatype-snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/sqooba/). 
 Add sqConf to your project, with sbt add this simple line:
@@ -81,12 +81,14 @@ Sq-conf works also with maven. Just add this to your pom.xml:
     <dependency>
       <groupId>io.sqooba</groupId>
       <artifactId>sq-conf_2.12</artifactId>
-      <version>0.4.2</version>
+      <version>0.5.0</version>
     </dependency>
 ```
 
 ## Future Plans
 - yml support
+- scala 2.13 support
+- test more complex type conversions from app.conf, also with java transformers
 
 ## Change History
 - 0.5.1 Allow configuring order of preference, bug fix valueoverrides not being passed on to sub confix, scala 2.13 support

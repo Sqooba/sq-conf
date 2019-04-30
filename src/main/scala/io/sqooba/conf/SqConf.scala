@@ -5,6 +5,7 @@ import java.time.Duration
 import java.util.Properties
 
 import scala.collection.JavaConverters._
+import scala.reflect.ClassTag
 
 import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
@@ -66,7 +67,7 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getValueAccordingOrderOfOfPreference[T](key: String, converter: String => T): T = {
+  def getValueAccordingOrderOfOfPreference[T: ClassTag](key: String, converter: String => T): T = {
     var value: T = null.asInstanceOf[T]
     orderOfPreference.takeWhile(oop => {
       value = getValueForOrderOfOfPreferenceItem[T](key, oop, converter)
@@ -75,7 +76,7 @@ class SqConf(fileName: String = null,
     value
   }
 
-  def getListOfValuesAccordingOrderOfPreference[T](key: String, converter: String => T): List[T] = {
+  def getListOfValuesAccordingOrderOfPreference[T: ClassTag](key: String, converter: String => T): List[T] = {
     var values: List[T] = List()
     orderOfPreference.takeWhile(oop => {
       values = getListOfValuesForOrderOfOfPreference[T](key, oop, converter)
@@ -84,7 +85,7 @@ class SqConf(fileName: String = null,
     values
   }
 
-  def getListOfValuesForOrderOfOfPreference[T](key: String, oop: OrderOfPreference, converter: String => T): List[T] = {
+  def getListOfValuesForOrderOfOfPreference[T: ClassTag](key: String, oop: OrderOfPreference, converter: String => T): List[T] = {
     val fullKey = buildKey(key)
 
     def stringToT(string: String): List[T] = string.split(',').map(x => {
@@ -108,7 +109,7 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getValueForOrderOfOfPreferenceItem[T](key: String, oop: OrderOfPreference, converter: String => T): T = {
+  def getValueForOrderOfOfPreferenceItem[T: ClassTag](key: String, oop: OrderOfPreference, converter: String => T): T = {
     val fullKey = buildKey(key)
 
     oop match {
