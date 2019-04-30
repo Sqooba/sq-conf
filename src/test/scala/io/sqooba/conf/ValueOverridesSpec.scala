@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class ValueOverridesSpec extends FlatSpec with Matchers {
 
-  val overrideMap = Map("some.testIntValue" -> "15",
+  val overrideMap: Map[String, String] = Map("some.testIntValue" -> "15",
     "some.testStringValue" -> "overridenstring",
     "some.testBooleanValue" -> "false",
     "some.testDurationValue" -> "10 s",

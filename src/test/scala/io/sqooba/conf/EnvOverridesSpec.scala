@@ -10,7 +10,7 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 
 	 val conf = new SqConf
 
-	"read int from env" should "refer env variable to conf" in {
+	"read int from env" should "prefer env variable to conf" in {
 		EnvUtil.setEnv(conf.keyAsEnv("some.testIntValue"), "50")
     Properties.envOrNone(conf.keyAsEnv("some.testIntValue")) shouldBe defined
 		val prop = conf.getInt("some.testIntValue")
@@ -84,5 +84,4 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		prop.getSeconds shouldBe 20
 		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationValue"))
 	}
-
 }

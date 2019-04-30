@@ -86,10 +86,12 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 ```
 
 ## Future Plans
+- yml support
 - scala 2.13 support
 - test more complex type conversions from app.conf, also with java transformers
 
 ## Change History
+- 0.5.1 Allow configuring order of preference, bug fix valueoverrides not being passed on to sub confix, scala 2.13 support
 - 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
 - 0.4.2 New toProperties convenience method, transformer interface for java to transform from string to any type.
 - 0.4.1 Remove dependency to option for the generic getter.
