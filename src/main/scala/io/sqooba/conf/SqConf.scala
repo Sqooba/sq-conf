@@ -135,12 +135,20 @@ class SqConf(fileName: String = null,
     props
   }
 
-  def getConfig(confPath: String): SqConf = {
-    new SqConf(null, null, config, confPath)
-  }
+  def getConfig(confPath: String): SqConf =
+    new SqConf(null, null, config, confPath, valueOverrides)
 
-  def withOverrides(overrides: Map[String, String]): SqConf = {
-    new SqConf(null, null, config, prefix, overrides)
+  def withOverrides(overrides: Map[String, String]): SqConf =
+    new SqConf(null, null, config, prefix, appendPrefixToOverridesIfNecessary(prefix, overrides))
+
+  def appendPrefixToOverridesIfNecessary(prefix: String, overrides: Map[String, String]): Map[String, String] = {
+    if (prefix == null || overrides.head._1.contains(prefix)) {
+      overrides
+    } else {
+      overrides.map(kv => {
+        (s"$prefix.${kv._1}", kv._2)
+      })
+    }
   }
 }
 
