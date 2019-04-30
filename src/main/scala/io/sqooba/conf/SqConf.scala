@@ -44,15 +44,15 @@ class SqConf(fileName: String = null,
 
   def getOrderOfPreference: List[OrderOfPreference] = orderOfPreference
 
-  def getInt(key: String): Int = getValueForKey[Int](key, x => x.toInt)
+  def getInt(key: String): Int = getValueAccordingOrderOfOfPreference[Int](key, x => x.toInt)
 
-  def getString(key: String): String = getValueForKey[String](key, x => x)
+  def getString(key: String): String = getValueAccordingOrderOfOfPreference[String](key, x => x)
 
-  def getBoolean(key: String): Boolean = getValueForKey[Boolean](key, x => x.toBoolean)
+  def getBoolean(key: String): Boolean = getValueAccordingOrderOfOfPreference[Boolean](key, x => x.toBoolean)
 
-  def getLong(key: String): Long = getValueForKey[Long](key, x => x.toLong)
+  def getLong(key: String): Long = getValueAccordingOrderOfOfPreference[Long](key, x => x.toLong)
 
-  def getBigInt(key: String): BigInt = getValueForKey[BigInt](key, x => BigInt(x))
+  def getBigInt(key: String): BigInt = getValueAccordingOrderOfOfPreference[BigInt](key, x => BigInt(x))
 
   def getDuration(key: String): Duration = {
     val fullKey = buildKey(key)
@@ -66,33 +66,46 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getValueForKey[T](key: String, converter: String => T): T = {
-    getValueAccordingOrderOfOfPreference[T](key, converter)
-
-    /*
-    val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey)) {
-      converter(valueOverrides(fullKey))
-    } else {
-      System.getenv(keyAsEnv(fullKey)) match {
-        case null => converter(conf.getString(fullKey))
-        case env: String => converter(env)
-      }
-    }
-    */
-  }
-
   def getValueAccordingOrderOfOfPreference[T](key: String, converter: String => T): T = {
     var value: T = null.asInstanceOf[T]
     orderOfPreference.takeWhile(oop => {
-      println(oop)
-
-      val res = getValueForOrderOfOfPreferenceItem[T](key, oop, converter)
-      println(res)
-      value = res
-      res == null
+      value = getValueForOrderOfOfPreferenceItem[T](key, oop, converter)
+      value == null
     })
     value
+  }
+
+  def getListOfValuesAccordingOrderOfOfPreference[T](key: String, converter: String => T): List[T] = {
+    var values: List[T] = List()
+    orderOfPreference.takeWhile(oop => {
+      values = getListOfValuesForOrderOfOfPreference[T](key, oop, converter)
+      values == null
+    })
+    values
+  }
+
+  def getListOfValuesForOrderOfOfPreference[T](key: String, oop: OrderOfPreference, converter: String => T): List[T] = {
+    val fullKey = buildKey(key)
+
+    def stringToT(string: String): List[T] = string.split(',').map(x => {
+      converter(x)
+    }).toList
+
+    oop match {
+      case OrderOfPreference.ENV_VARIABLE =>
+        System.getenv(keyAsEnv(fullKey)) match {
+          case null => getListOf[T](fullKey, converter, false)
+          case env => stringToT(valueOverrides(fullKey))
+        }
+      case OrderOfPreference.CONF_FIlE => getListOf[T](fullKey, converter, false)
+      case OrderOfPreference.VALUE_OVERRIDES => {
+        if (valueOverrides.contains(fullKey)) {
+          stringToT(valueOverrides(fullKey))
+        } else {
+          List[T]()
+        }
+      }
+    }
   }
 
   def getValueForOrderOfOfPreferenceItem[T](key: String, oop: OrderOfPreference, converter: String => T): T = {

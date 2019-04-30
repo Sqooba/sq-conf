@@ -103,7 +103,7 @@ class SqConfSpec extends FlatSpec with Matchers {
     val res = conf.getListOfDouble("some.testDoubleListValue")
 
     res.length shouldBe 3
-    compare(res(0), 10.5, 0.00001) shouldBe true
+    compare(res.head, 10.5, 0.00001) shouldBe true
     compare(res(2), 999.999, 0.00001) shouldBe true
   }
 
@@ -111,7 +111,7 @@ class SqConfSpec extends FlatSpec with Matchers {
     val res = conf.getListOfDouble("some.testDoubleListAsStringList")
 
     res.length shouldBe 3
-    compare(res(0), 10.5, 0.00001) shouldBe true
+    compare(res.head, 10.5, 0.00001) shouldBe true
     compare(res(2), 999.999, 0.00001) shouldBe true
   }
 
@@ -128,16 +128,15 @@ class SqConfSpec extends FlatSpec with Matchers {
   "get long from strings" should "give a proper long list" in {
     val loooongs: List[Long] = conf.getListOfLong("some.testLongListAsStringValue")
     loooongs.size shouldBe 3
-    loooongs(0) shouldBe a [java.lang.Long]
+    loooongs.head shouldBe a [java.lang.Long]
   }
 
   "get ints from strings" should "give a proper int list" in {
     val loooongs: List[Int] = conf.getListOfInt("some.testIntListAsStringValue")
     loooongs.size shouldBe 3
 
-    loooongs(0) shouldBe a [java.lang.Integer]
+    loooongs.head shouldBe a [java.lang.Integer]
   }
-
 
   def compare(x: Double, y: Double, precision: Double) = {
     if ((x - y).abs < precision) true else false

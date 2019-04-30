@@ -4,11 +4,11 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class SubConfSpec extends FlatSpec with Matchers {
 
-	val conf = new SqConf
-	val childConf = conf.getConfig("subConf.another")
+	val conf: SqConf = new SqConf
+	val childConf: SqConf = conf.getConfig("subConf.another")
 
-	val javaConf = conf.asJava()
-	val javaChildConf = javaConf.getConfig("subConf.another")
+	val javaConf: JavaSqConf = conf.asJava()
+	val javaChildConf: JavaSqConf = javaConf.getConfig("subConf.another")
 
 
 	"get sub config" should "give a valid sqConf" in {

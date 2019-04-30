@@ -16,13 +16,11 @@ class JavaSqConf(sqConf: SqConf) {
 
   def get[T](key: String): T = sqConf.get[T](key)
 
-  def getWithTransformer[T](key: String, transformer: Transformer[T]): T = {
-    sqConf.getValueForKey(key, transformer.transform(_))
-  }
+  def getWithTransformer[T](key: String, transformer: Transformer[T]): T =
+    sqConf.getValueAccordingOrderOfOfPreference(key, transformer.transform(_))
 
-  def getListWithTransformer[T](key: String, transformer: Transformer[T]): List[T] = {
+  def getListWithTransformer[T](key: String, transformer: Transformer[T]): List[T] =
     sqConf.getListOf(key, transformer.transform(_), false)
-  }
 
   def getIterable[T](key: String): java.lang.Iterable[T] = {
     val list: List[T] = sqConf.getListOf[T](key)
@@ -43,7 +41,5 @@ class JavaSqConf(sqConf: SqConf) {
 
   def toProperties: java.util.Properties = sqConf.toProperties()
 
-  def getConfig(path: String): JavaSqConf = {
-    sqConf.getConfig(path).asJava()
-  }
+  def getConfig(path: String): JavaSqConf = sqConf.getConfig(path).asJava()
 }
