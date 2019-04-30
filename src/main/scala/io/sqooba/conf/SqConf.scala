@@ -9,6 +9,7 @@ import scala.collection.JavaConverters._
 import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
 import com.typesafe.scalalogging.LazyLogging
+import io.sqooba.conf.OrderOfPreference.OrderOfPreference
 
 // Here we have nulls and avoid option on purpose so the java bindings work without scala standard lib
 class SqConf(fileName: String = null,
@@ -16,6 +17,10 @@ class SqConf(fileName: String = null,
              config: Config = null,
              prefix: String = null,
              valueOverrides: Map[String, String] = Map()) extends LazyLogging {
+  private var orderOfPreference: List[OrderOfPreference] = List(
+    OrderOfPreference.VALUE_OVERRIDES,
+    OrderOfPreference.ENV_VARIABLE,
+    OrderOfPreference.CONF_FIlE)
 
   def this() = this(null, null, null, null)
 
@@ -36,6 +41,8 @@ class SqConf(fileName: String = null,
       case pre => s"$pre.$key"
     }
   }
+
+  def getOrderOfPreference: List[OrderOfPreference] = orderOfPreference
 
   def getInt(key: String): Int = getValueForKey[Int](key, x => x.toInt)
 
@@ -60,10 +67,9 @@ class SqConf(fileName: String = null,
   }
 
   def getValueForKey[T](key: String, converter: String => T): T = {
+    getValueAccordingOrderOfOfPreference[T](key, converter)
 
-    println(s"prefix: $prefix")
-    println(s"overrides: $valueOverrides")
-
+    /*
     val fullKey = buildKey(key)
     if (valueOverrides.contains(fullKey)) {
       converter(valueOverrides(fullKey))
@@ -71,6 +77,40 @@ class SqConf(fileName: String = null,
       System.getenv(keyAsEnv(fullKey)) match {
         case null => converter(conf.getString(fullKey))
         case env: String => converter(env)
+      }
+    }
+    */
+  }
+
+  def getValueAccordingOrderOfOfPreference[T](key: String, converter: String => T): T = {
+    var value: T = null.asInstanceOf[T]
+    orderOfPreference.takeWhile(oop => {
+      println(oop)
+
+      val res = getValueForOrderOfOfPreferenceItem[T](key, oop, converter)
+      println(res)
+      value = res
+      res == null
+    })
+    value
+  }
+
+  def getValueForOrderOfOfPreferenceItem[T](key: String, oop: OrderOfPreference, converter: String => T): T = {
+    val fullKey = buildKey(key)
+
+    oop match {
+      case OrderOfPreference.ENV_VARIABLE =>
+        System.getenv(keyAsEnv(fullKey)) match {
+          case null => null.asInstanceOf[T]
+          case env => converter(env)
+        }
+      case OrderOfPreference.CONF_FIlE => converter(conf.getString(fullKey))
+      case OrderOfPreference.VALUE_OVERRIDES => {
+        if (valueOverrides.contains(fullKey)) {
+          converter(valueOverrides(fullKey))
+        } else {
+          null.asInstanceOf[T]
+        }
       }
     }
   }
@@ -94,7 +134,7 @@ class SqConf(fileName: String = null,
     })
   }
 
-  def getListOf[T](key: String): List[T] = getListOf[T](key, null, true)
+  def getListOf[T](key: String): List[T] = getListOf[T](key, null, cast = true)
 
   def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
 
@@ -137,13 +177,21 @@ class SqConf(fileName: String = null,
     props
   }
 
-  def getConfig(confPath: String): SqConf = {
+  def getConfig(confPath: String): SqConf =
     new SqConf(null, null, config, confPath, valueOverrides)
-  }
 
-  def withOverrides(overrides: Map[String, String]): SqConf = {
+  def withOverrides(overrides: Map[String, String]): SqConf =
     new SqConf(null, null, config, prefix, overrides)
+
+  def configureOrder(order: List[OrderOfPreference]): SqConf = {
+    orderOfPreference = order
+    this
   }
+}
+
+object OrderOfPreference extends Enumeration {
+  type OrderOfPreference = Value
+  val VALUE_OVERRIDES, ENV_VARIABLE, CONF_FIlE = Value
 }
 
 object SqConf {
