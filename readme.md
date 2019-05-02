@@ -67,8 +67,23 @@ object.
     javaWrapper.getString("some.testStringValue") // returns java.lang.String
 ```
 
+## Configure order of preference
+Order of preference defines in which order configuration keys are read. By default the order goes:
+ 1.  valueOverrides given during creation of config
+ 2.  environment variables
+ 3.  config file
+ Order can be configured freely, for example:
+ ```
+   val orderOfPreference: List[OrderOfPreference.Value] = List(
+     OrderOfPreference.CONF_FIlE,
+     OrderOfPreference.ENV_VARIABLE,
+     OrderOfPreference.VALUE_OVERRIDES)
+    val conf = new SqConf().configureOrder(oop)
+ ```
+ Now order would be reversed in comparison to the default.
+
 ## Getting started
-Sq-conf is cross compiled for scala 2.11 and 2.12. For the latest of the latest, sq-conf snapshots 
+Sq-conf is cross compiled for scala 2.11, 2.12 and 2.13. For the latest of the latest, sq-conf snapshots 
 are available in sonatype repo: 
 [sonatype-snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/sqooba/). 
 Add sqConf to your project, with sbt add this simple line:
@@ -81,15 +96,16 @@ Sq-conf works also with maven. Just add this to your pom.xml:
     <dependency>
       <groupId>io.sqooba</groupId>
       <artifactId>sq-conf_2.12</artifactId>
-      <version>0.4.2</version>
+      <version>0.5.0</version>
     </dependency>
 ```
 
 ## Future Plans
-- scala 2.13 support
+- yml support
 - test more complex type conversions from app.conf, also with java transformers
 
 ## Change History
+- 0.5.1 Allow configuring order of preference, bug fix value overrides not being passed on to sub confix, scala 2.13 support
 - 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
 - 0.4.2 New toProperties convenience method, transformer interface for java to transform from string to any type.
 - 0.4.1 Remove dependency to option for the generic getter.

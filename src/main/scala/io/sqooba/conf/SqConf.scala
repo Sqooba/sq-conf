@@ -5,17 +5,19 @@ import java.time.Duration
 import java.util.Properties
 
 import scala.collection.JavaConverters._
+import scala.reflect.ClassTag
 
 import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
 import com.typesafe.scalalogging.LazyLogging
+import io.sqooba.conf.OrderOfPreference.OrderOfPreference
 
 // Here we have nulls and avoid option on purpose so the java bindings work without scala standard lib
 class SqConf(fileName: String = null,
              file: File = null,
              config: Config = null,
              prefix: String = null,
-             valueOverrides: Map[String, String] = Map()) extends LazyLogging {
+             valueOverrides: Map[String, String] = Map(), orderOfPreference: List[OrderOfPreference] = SqConf.DEFAULT_ORDER_OF_PREFERENCe) extends LazyLogging {
 
   def this() = this(null, null, null, null)
 
@@ -37,15 +39,17 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getInt(key: String): Int = getValueForKey[Int](key, x => x.toInt)
+  def getOrderOfPreference: List[OrderOfPreference] = orderOfPreference
 
-  def getString(key: String): String = getValueForKey[String](key, x => x)
+  def getInt(key: String): Int = getValueAccordingOrderOfOfPreference[Int](key, x => x.toInt)
 
-  def getBoolean(key: String): Boolean = getValueForKey[Boolean](key, x => x.toBoolean)
+  def getString(key: String): String = getValueAccordingOrderOfOfPreference[String](key, x => x)
 
-  def getLong(key: String): Long = getValueForKey[Long](key, x => x.toLong)
+  def getBoolean(key: String): Boolean = getValueAccordingOrderOfOfPreference[Boolean](key, x => x.toBoolean)
 
-  def getBigInt(key: String): BigInt = getValueForKey[BigInt](key, x => BigInt(x))
+  def getLong(key: String): Long = getValueAccordingOrderOfOfPreference[Long](key, x => x.toLong)
+
+  def getBigInt(key: String): BigInt = getValueAccordingOrderOfOfPreference[BigInt](key, x => BigInt(x))
 
   def getDuration(key: String): Duration = {
     val fullKey = buildKey(key)
@@ -59,14 +63,65 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getValueForKey[T](key: String, converter: String => T): T = {
+  def getValueAccordingOrderOfOfPreference[T: ClassTag](key: String, converter: String => T): T = {
+    var value: T = null.asInstanceOf[T]
+    orderOfPreference.takeWhile(oop => {
+      value = getValueForOrderOfOfPreferenceItem[T](key, oop, converter)
+      value == null
+    })
+    value
+  }
+
+  def getListOfValuesAccordingOrderOfPreference[T: ClassTag](key: String, converter: String => T): List[T] = {
+    var values: List[T] = List()
+
+    orderOfPreference.takeWhile(oop => {
+      values = getListOfValuesForOrderOfOfPreference[T](key, oop, converter)
+      values.isEmpty
+    })
+    values
+  }
+
+  def getListOfValuesForOrderOfOfPreference[T: ClassTag](key: String, oop: OrderOfPreference, converter: String => T): List[T] = {
     val fullKey = buildKey(key)
-    if (valueOverrides.contains(fullKey)) {
-      converter(valueOverrides(fullKey))
-    } else {
-      System.getenv(keyAsEnv(fullKey)) match {
-        case null => converter(conf.getString(fullKey))
-        case env: String => converter(env)
+
+    def stringToT(string: String): List[T] = string.split(',').map(x => {
+      converter(x)
+    }).toList
+
+    oop match {
+      case OrderOfPreference.ENV_VARIABLE =>
+        System.getenv(keyAsEnv(fullKey)) match {
+          case null => List()
+          case env => stringToT(env)
+        }
+      case OrderOfPreference.CONF_FIlE => getListOf[T](fullKey, converter, false)
+      case OrderOfPreference.VALUE_OVERRIDES => {
+        if (valueOverrides.contains(fullKey)) {
+          stringToT(valueOverrides(fullKey))
+        } else {
+          List[T]()
+        }
+      }
+    }
+  }
+
+  def getValueForOrderOfOfPreferenceItem[T: ClassTag](key: String, oop: OrderOfPreference, converter: String => T): T = {
+    val fullKey = buildKey(key)
+
+    oop match {
+      case OrderOfPreference.ENV_VARIABLE =>
+        System.getenv(keyAsEnv(fullKey)) match {
+          case null => null.asInstanceOf[T]
+          case env => converter(env)
+        }
+      case OrderOfPreference.CONF_FIlE => converter(conf.getString(fullKey))
+      case OrderOfPreference.VALUE_OVERRIDES => {
+        if (valueOverrides.contains(fullKey)) {
+          converter(valueOverrides(fullKey))
+        } else {
+          null.asInstanceOf[T]
+        }
       }
     }
   }
@@ -90,40 +145,23 @@ class SqConf(fileName: String = null,
     })
   }
 
-  def getListOf[T](key: String): List[T] = getListOf[T](key, null, true)
+  def getListOf[T](key: String): List[T] = getListOf[T](key, null, cast = true)
 
-  def getListOfInt(key: String): List[Int] = getListOfWithConversion(key, str => str.trim.toInt)
+  def getListOfInt(key: String): List[Int] = getListOfValuesAccordingOrderOfPreference[Int](key, str => str.trim.toInt)
 
   def getListOfDouble(key: String): List[Double] =
-    getListOfWithConversion(key, str => str.trim.toDouble)
+    getListOfValuesAccordingOrderOfPreference[Double](key, str => str.trim.toDouble)
 
   def getListOfLong(key: String): List[Long] =
-    getListOfWithConversion(key, str => str.trim.toLong)
+    getListOfValuesAccordingOrderOfPreference[Long](key, str => str.trim.toLong)
 
-  def getListOfString(key: String): List[String] = getListOfWithConversion(key, str => str.trim)
+  def getListOfString(key: String): List[String] = getListOfValuesAccordingOrderOfPreference[String](key, str => str.trim)
 
   def getListOfBoolean(key: String): List[Boolean] =
-    getListOfWithConversion(key, str => str.trim.toBoolean)
+    getListOfValuesAccordingOrderOfPreference[Boolean](key, str => str.trim.toBoolean)
 
-  def getListOfDuration(key: String): List[Duration] = getListOfWithConversion[Duration](key, str =>
-    DurationParser.parseDurationString(str, key, "listOfDuration"), cast = false)
-
-  def getListOfWithConversion[T](key: String, convert: String => T, cast: Boolean = false): List[T] = {
-    val fullKey = buildKey(key)
-
-    def stringToT(string: String): List[T] = string.split(',').map(x => {
-      convert(x)
-    }).toList
-
-    if (valueOverrides.contains(fullKey)) {
-      stringToT(valueOverrides(fullKey))
-    } else {
-      System.getenv(keyAsEnv(fullKey)) match {
-        case null => getListOf[T](fullKey, convert, cast)
-        case env: String => stringToT(env)
-      }
-    }
-  }
+  def getListOfDuration(key: String): List[Duration] =
+    getListOfValuesAccordingOrderOfPreference[Duration](key, str => DurationParser.parseDurationString(str, key, "listOfDuration"))
 
   def toProperties(defaults: Properties = null): Properties = {
     val props = new Properties
@@ -133,16 +171,38 @@ class SqConf(fileName: String = null,
     props
   }
 
-  def getConfig(confPath: String): SqConf = {
-    new SqConf(null, null, config, confPath)
+  def getSubConfig(confPath: String): SqConf =
+    new SqConf(null, null, config, confPath, valueOverrides, orderOfPreference)
+
+  def withOverrides(overrides: Map[String, String]): SqConf =
+    new SqConf(null, null, config, prefix, appendPrefixToOverridesIfNecessary(prefix, overrides), orderOfPreference)
+
+  def appendPrefixToOverridesIfNecessary(prefix: String, overrides: Map[String, String]): Map[String, String] = {
+    if (prefix == null || overrides.head._1.contains(prefix)) {
+      overrides
+    } else {
+      overrides.map(kv => {
+        (s"$prefix.${kv._1}", kv._2)
+      })
+    }
   }
 
-  def withOverrides(overrides: Map[String, String]): SqConf = {
-    new SqConf(null, null, config, prefix, overrides)
-  }
+  def configureOrder(order: List[OrderOfPreference]): SqConf =
+    new SqConf(null, null, config, prefix, valueOverrides, order)
+}
+
+object OrderOfPreference extends Enumeration {
+  type OrderOfPreference = Value
+  val VALUE_OVERRIDES, ENV_VARIABLE, CONF_FIlE = Value
 }
 
 object SqConf {
+
+  val DEFAULT_ORDER_OF_PREFERENCe: List[OrderOfPreference] = List(
+    OrderOfPreference.VALUE_OVERRIDES,
+    OrderOfPreference.ENV_VARIABLE,
+    OrderOfPreference.CONF_FIlE)
+
   def forFile(file: File): SqConf = {
     new SqConf(null, file, null, null)
   }
