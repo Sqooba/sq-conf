@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class SubConfSpec extends FlatSpec with Matchers {
 
 	val conf: SqConf = new SqConf
-	val childConf: SqConf = conf.getConfig("subConf.another")
+	val childConf: SqConf = conf.getSubConfig("subConf.another")
 
 	val javaConf: JavaSqConf = conf.asJava()
 	val javaChildConf: JavaSqConf = javaConf.getConfig("subConf.another")

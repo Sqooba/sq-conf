@@ -17,11 +17,7 @@ class SqConf(fileName: String = null,
              file: File = null,
              config: Config = null,
              prefix: String = null,
-             valueOverrides: Map[String, String] = Map()) extends LazyLogging {
-  private var orderOfPreference: List[OrderOfPreference] = List(
-    OrderOfPreference.VALUE_OVERRIDES,
-    OrderOfPreference.ENV_VARIABLE,
-    OrderOfPreference.CONF_FIlE)
+             valueOverrides: Map[String, String] = Map(), orderOfPreference: List[OrderOfPreference] = SqConf.DEFAULT_ORDER_OF_PREFERENCe) extends LazyLogging {
 
   def this() = this(null, null, null, null)
 
@@ -78,6 +74,7 @@ class SqConf(fileName: String = null,
 
   def getListOfValuesAccordingOrderOfPreference[T: ClassTag](key: String, converter: String => T): List[T] = {
     var values: List[T] = List()
+
     orderOfPreference.takeWhile(oop => {
       values = getListOfValuesForOrderOfOfPreference[T](key, oop, converter)
       values.isEmpty
@@ -174,9 +171,11 @@ class SqConf(fileName: String = null,
     props
   }
 
-  def getConfig(confPath: String): SqConf = new SqConf(null, null, config, confPath, valueOverrides)
+  def getSubConfig(confPath: String): SqConf =
+    new SqConf(null, null, config, confPath, valueOverrides, orderOfPreference)
 
-  def withOverrides(overrides: Map[String, String]): SqConf = new SqConf(null, null, config, prefix, appendPrefixToOverridesIfNecessary(prefix, overrides))
+  def withOverrides(overrides: Map[String, String]): SqConf =
+    new SqConf(null, null, config, prefix, appendPrefixToOverridesIfNecessary(prefix, overrides), orderOfPreference)
 
   def appendPrefixToOverridesIfNecessary(prefix: String, overrides: Map[String, String]): Map[String, String] = {
     if (prefix == null || overrides.head._1.contains(prefix)) {
@@ -188,10 +187,8 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def configureOrder(order: List[OrderOfPreference]): SqConf = {
-    orderOfPreference = order
-    this
-  }
+  def configureOrder(order: List[OrderOfPreference]): SqConf =
+    new SqConf(null, null, config, prefix, valueOverrides, order)
 }
 
 object OrderOfPreference extends Enumeration {
@@ -200,6 +197,12 @@ object OrderOfPreference extends Enumeration {
 }
 
 object SqConf {
+
+  val DEFAULT_ORDER_OF_PREFERENCe: List[OrderOfPreference] = List(
+    OrderOfPreference.VALUE_OVERRIDES,
+    OrderOfPreference.ENV_VARIABLE,
+    OrderOfPreference.CONF_FIlE)
+
   def forFile(file: File): SqConf = {
     new SqConf(null, file, null, null)
   }
