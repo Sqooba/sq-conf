@@ -8,7 +8,7 @@ licenses      := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE
 crossScalaVersions := Seq("2.13.0-M5", "2.12.8", "2.11.12")
 
 libraryDependencies ++= Seq(
-  "com.typesafe"                %   "config"                  % "1.3.3",
+  "com.typesafe"                %   "config"                  % "1.3.4",
   "com.typesafe.scala-logging"  %%  "scala-logging"           % "3.9.0",
   "ch.qos.logback"              %   "logback-classic"         % "1.2.3"             % Test,
   "org.scalatest"               %%  "scalatest"               % "3.0.7"             % Test,

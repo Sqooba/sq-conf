@@ -17,7 +17,7 @@ class SqConf(fileName: String = null,
              file: File = null,
              config: Config = null,
              prefix: String = null,
-             valueOverrides: Map[String, String] = Map(), orderOfPreference: List[OrderOfPreference] = SqConf.DEFAULT_ORDER_OF_PREFERENCe) extends LazyLogging {
+             valueOverrides: Map[String, String] = Map(), orderOfPreference: List[OrderOfPreference] = SqConf.DEFAULT_ORDER_OF_PREFERENCE) extends LazyLogging {
 
   def this() = this(null, null, null, null)
 
@@ -26,7 +26,15 @@ class SqConf(fileName: String = null,
   val conf: Config = {
     (fileName, file, config) match {
       case (null, null, conf: Config) => conf
-      case (fileN: String, null, null) => ConfigFactory.load(fileN)
+      case (fileN: String, null, null) => {
+        if (checkIfYml(fileN)) { // YML Seems to only work if loaded as a file
+          val url = this.getClass.getResource("/" + fileN)
+          val f = new File(url.getPath)
+          ConfigFactory.parseFile(f)
+        } else {
+          ConfigFactory.load(fileN)
+        }
+      }
       case (_, fileF: File, null) => ConfigFactory.parseFile(fileF)
       case _ => ConfigFactory.load()
     }
@@ -38,6 +46,8 @@ class SqConf(fileName: String = null,
       case pre => s"$pre.$key"
     }
   }
+
+  def checkIfYml(fileN: String): Boolean = (fileN.endsWith("yml") || fileN.endsWith("yaml"))
 
   def getOrderOfPreference: List[OrderOfPreference] = orderOfPreference
 
@@ -65,6 +75,7 @@ class SqConf(fileName: String = null,
 
   def getValueAccordingOrderOfOfPreference[T: ClassTag](key: String, converter: String => T): T = {
     var value: T = null.asInstanceOf[T]
+
     orderOfPreference.takeWhile(oop => {
       value = getValueForOrderOfOfPreferenceItem[T](key, oop, converter)
       value == null
@@ -198,7 +209,7 @@ object OrderOfPreference extends Enumeration {
 
 object SqConf {
 
-  val DEFAULT_ORDER_OF_PREFERENCe: List[OrderOfPreference] = List(
+  val DEFAULT_ORDER_OF_PREFERENCE: List[OrderOfPreference] = List(
     OrderOfPreference.VALUE_OVERRIDES,
     OrderOfPreference.ENV_VARIABLE,
     OrderOfPreference.CONF_FIlE)
