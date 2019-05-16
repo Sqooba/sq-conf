@@ -1,5 +1,7 @@
 package io.sqooba.conf
 
+import java.io.File
+
 import com.typesafe.config.{Config, ConfigFactory}
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -35,8 +37,11 @@ class YamlConfSpec extends FlatSpec with Matchers {
 	}
 
 	"loading another config" should "work for yml, be same for typesafe and sq conf" in {
-		val sqConf = SqConf.forFilename("ymlconf.yml")
-		val conf = ConfigFactory.load("ymlconf.yml")
+		val ymlFileName = "ymlconf.yml"
+		val u = this.getClass.getResource(s"/$ymlFileName")
+		val f  = new File(u.getPath)
+		val sqConf = SqConf.forFilename(ymlFileName)
+		val conf = ConfigFactory.parseFile(f)
 
 		sqConf.getInt("invoice") shouldBe 34843
 		conf.getInt("invoice") shouldBe 34843
