@@ -84,4 +84,14 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		prop.getSeconds shouldBe 20
 		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationValue"))
 	}
+
+	"read duration from env" should "refer env variable to conf" in {
+		EnvUtil.setEnv(conf.keyAsEnv("some.testDurationValue"), "20s")
+		Properties.envOrNone(conf.keyAsEnv("some.testDurationValue")) shouldBe defined
+		val prop = conf.getDuration("some.testDurationValue")
+
+		prop shouldBe a [java.time.Duration]
+		prop.getSeconds shouldBe 20
+		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationValue"))
+	}
 }

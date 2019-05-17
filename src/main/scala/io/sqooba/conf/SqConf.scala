@@ -47,7 +47,7 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def checkIfYml(fileN: String): Boolean = (fileN.endsWith("yml") || fileN.endsWith("yaml"))
+  def checkIfYml(fileN: String): Boolean = fileN.endsWith("yml") || fileN.endsWith("yaml")
 
   def getOrderOfPreference: List[OrderOfPreference] = orderOfPreference
 
@@ -106,7 +106,7 @@ class SqConf(fileName: String = null,
           case null => List()
           case env => stringToT(env)
         }
-      case OrderOfPreference.CONF_FIlE => getListOf[T](fullKey, converter, false)
+      case OrderOfPreference.CONF_FIlE => getListOf[T](fullKey, converter, cast = false)
       case OrderOfPreference.VALUE_OVERRIDES => {
         if (valueOverrides.contains(fullKey)) {
           stringToT(valueOverrides(fullKey))
