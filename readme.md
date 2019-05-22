@@ -88,7 +88,7 @@ are available in sonatype repo:
 [sonatype-snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/sqooba/). 
 Add sqConf to your project, with sbt add this simple line:
 ```
-    libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.4.2" 
+    libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.5.1" 
 ```
 
 Sq-conf works also with maven. Just add this to your pom.xml:
@@ -96,7 +96,7 @@ Sq-conf works also with maven. Just add this to your pom.xml:
     <dependency>
       <groupId>io.sqooba</groupId>
       <artifactId>sq-conf_2.12</artifactId>
-      <version>0.5.0</version>
+      <version>0.5.1</version>
     </dependency>
 ```
 
