@@ -78,7 +78,7 @@ Order of preference defines in which order configuration keys are read. By defau
      OrderOfPreference.CONF_FIlE,
      OrderOfPreference.ENV_VARIABLE,
      OrderOfPreference.VALUE_OVERRIDES)
-    val conf = new SqConf().configureOrder(oop)
+   val conf = new SqConf().configureOrder(oop)
  ```
  Now order would be reversed in comparison to the default.
 
