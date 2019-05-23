@@ -19,10 +19,10 @@ class JavaSqConf(sqConf: SqConf) {
   def get[T](key: String): T = sqConf.get[T](key)
 
   def getWithTransformer[T: ClassTag](key: String, transformer: Transformer[T]): T =
-    sqConf.getValueAccordingOrderOfOfPreference(key, transformer.transform(_))
+    sqConf.getValueAccordingOrderOfOfPreference(key, transformer.transform)
 
   def getListWithTransformer[T: ClassTag](key: String, transformer: Transformer[T]): List[T] =
-    sqConf.getListOf(key, transformer.transform(_), false)
+    sqConf.getListOf(key, transformer.transform, cast = false)
 
   def getIterable[T](key: String): java.lang.Iterable[T] = {
     val list: List[T] = sqConf.getListOf[T](key)

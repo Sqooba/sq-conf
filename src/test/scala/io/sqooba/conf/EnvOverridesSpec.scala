@@ -84,4 +84,5 @@ class EnvOverridesSpec extends FlatSpec with Matchers {
 		prop.getSeconds shouldBe 20
 		EnvUtil.removeEnv(conf.keyAsEnv("some.testDurationValue"))
 	}
+
 }
