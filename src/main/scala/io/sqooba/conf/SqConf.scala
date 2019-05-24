@@ -199,13 +199,13 @@ class SqConf(fileName: String = null,
   }
 
   def getListOfKeys: Set[String] = {
-    val keysSet = if (prefix == null) {
-      conf.root().entrySet()
+    val confRoot = if (prefix == null) {
+      conf
     } else {
-      conf.getConfig(prefix).entrySet()
+      conf.getConfig(prefix)
     }
 
-    val keys = keysSet.asScala.filter(k => {
+    val keys = confRoot.root().entrySet().asScala.filter(k => {
       k.getValue.origin().filename() != null
     }).map(_.getKey)
 

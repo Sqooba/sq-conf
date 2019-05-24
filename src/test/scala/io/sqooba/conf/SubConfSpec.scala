@@ -41,4 +41,12 @@ class SubConfSpec extends FlatSpec with Matchers {
 		keys should contain allOf ("aInt", "aString")
 	}
 
+	it should "give a list of keys at the given sub conf level" in {
+		val keys = conf.getSubConfig("subConf").getListOfKeys
+		println(keys)
+		keys.size shouldBe 3
+		keys should contain allOf ("intList", "another", "rootString")
+	}
+
+
 }
