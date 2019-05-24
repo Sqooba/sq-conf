@@ -48,5 +48,12 @@ class SubConfSpec extends FlatSpec with Matchers {
 		keys should contain allOf ("intList", "another", "rootString")
 	}
 
+	"sub conf of a subconf" should "still give valid items" in {
+		val sConf = conf.getSubConfig("subConf")
+		val ssConf = sConf.getSubConfig("another")
+
+		ssConf.getString("aString") shouldBe "this is a string"
+		ssConf.getInt("aInt") shouldBe 123
+	}
 
 }
