@@ -95,7 +95,6 @@ class SqConf(fileName: String = null,
 
   def getListOfValuesForOrderOfOfPreference[T: ClassTag](key: String, oop: OrderOfPreference, converter: String => T): List[T] = {
     val fullKey = buildKey(key)
-    println(s"fullK:list: $fullKey")
 
     def stringToT(string: String): List[T] = string.split(',').map(x => {
       converter(x)
@@ -120,7 +119,6 @@ class SqConf(fileName: String = null,
 
   def getValueForOrderOfOfPreferenceItem[T: ClassTag](key: String, oop: OrderOfPreference, converter: String => T): T = {
     val fullKey = buildKey(key)
-    println(s"fullK:item: $fullKey")
 
     oop match {
       case OrderOfPreference.ENV_VARIABLE =>
