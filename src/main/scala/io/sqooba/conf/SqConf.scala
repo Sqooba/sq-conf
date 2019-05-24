@@ -198,6 +198,20 @@ class SqConf(fileName: String = null,
     }
   }
 
+  def getListOfKeys: Set[String] = {
+    val keysSet = if (prefix == null) {
+      conf.root().entrySet()
+    } else {
+      conf.getConfig(prefix).entrySet()
+    }
+
+    val keys = keysSet.asScala.filter(k => {
+      k.getValue.origin().filename() != null
+    }).map(_.getKey)
+
+    keys.toSet
+  }
+
   def configureOrder(order: List[OrderOfPreference]): SqConf =
     new SqConf(null, null, config, prefix, valueOverrides, order)
 }

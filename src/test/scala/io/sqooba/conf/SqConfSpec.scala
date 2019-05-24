@@ -134,11 +134,16 @@ class SqConfSpec extends FlatSpec with Matchers {
   "get ints from strings" should "give a proper int list" in {
     val loooongs: List[Int] = conf.getListOfInt("some.testIntListAsStringValue")
     loooongs.size shouldBe 3
-
     loooongs.head shouldBe a [java.lang.Integer]
   }
 
-  def compare(x: Double, y: Double, precision: Double) = {
+  "get keys" should "give a list of keys at the root of the conf" in {
+    val keys = conf.getListOfKeys
+    keys.size shouldBe 4
+    keys should contain allOf ("simplevalue", "filename", "subConf", "some")
+  }
+
+  def compare(x: Double, y: Double, precision: Double): Boolean = {
     if ((x - y).abs < precision) true else false
   }
 }
