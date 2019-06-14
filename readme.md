@@ -14,7 +14,8 @@ define this in config. Also key does not need to exist in the config in the firs
 
 ```
     // reads application.conf
-    val sqConf = new SqConf() 
+    val sqConf = new SqConf()
+    
     val sqConf = SqConf.default()
     
     val sqConf = SqConf.forFilename("other.conf") // reads other.conf from classpath instead.
@@ -63,8 +64,8 @@ object.
 ```
     val asProperties: Properties = new SqConf().toProperties()
 	
-    javaWrapper.getInt("some.testIntValue") // returns java.lang.Integer
-    javaWrapper.getString("some.testStringValue") // returns java.lang.String
+    val someIntVal = asProperties.getProperty("some.testIntValue").toInt // properties always returns string
+    val someStringVal = asProperties.getProperty("some.testStringValue")
 ```
 
 ## Configure order of preference
