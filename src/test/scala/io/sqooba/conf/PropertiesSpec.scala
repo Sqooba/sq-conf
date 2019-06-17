@@ -10,7 +10,7 @@ class PropertiesSpec extends FlatSpec with Matchers {
 
   "sqConf.toProperties" should "create java.util.Properties with valid keys" in {
     val props = conf.toProperties()
-    val intVal = conf.get[Int]("some.testIntValue")
+    val intVal: Int = conf.get[Int]("some.testIntValue")
     val stringVal = conf.get[String]("some.testStringValue")
 
     props shouldBe a [Properties]

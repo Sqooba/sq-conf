@@ -1,9 +1,8 @@
 package io.sqooba.conf
 
 import java.time.Duration
-import java.util.Properties
 
-import com.typesafe.config.ConfigException
+import com.typesafe.config.{ConfigException, ConfigOriginFactory}
 import org.scalatest.{FlatSpec, Matchers}
 
 class SqConfSpec extends FlatSpec with Matchers {
@@ -141,6 +140,10 @@ class SqConfSpec extends FlatSpec with Matchers {
     val keys = conf.getListOfKeys
     keys.size shouldBe 4
     keys should contain allOf ("simplevalue", "filename", "subConf", "some")
+  }
+
+  "test test" should "dur" in {
+    // com.typesafe.config.impl.SimpleConfig.parseDuration("10 s",ConfigOriginFactory.newSimple("source"), "key")
   }
 
   def compare(x: Double, y: Double, precision: Double): Boolean = {
