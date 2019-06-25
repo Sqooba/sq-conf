@@ -88,7 +88,7 @@ are available in sonatype repo:
 [sonatype-snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/sqooba/). 
 Add sqConf to your project, with sbt add this simple line:
 ```
-    libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.5.1" 
+    libraryDependencies +=  "io.sqooba" %% "sq-conf" % "0.5.2" 
 ```
 
 Sq-conf works also with maven. Just add this to your pom.xml:
@@ -96,17 +96,18 @@ Sq-conf works also with maven. Just add this to your pom.xml:
     <dependency>
       <groupId>io.sqooba</groupId>
       <artifactId>sq-conf_2.12</artifactId>
-      <version>0.5.1</version>
+      <version>0.5.2</version>
     </dependency>
 ```
 
 ## Future Plans
 - improve api documentation/ from nonexistent to something
-- get keys
 - yml support
 - test more complex type conversions from app.conf, also with java transformers
+- getAvailableKeys, already exists, but requires work
 
 ## Change History
+- 0.5.2 Scala 2.13 support, preliminary 
 - 0.5.1 Allow configuring order of preference, bug fix value overrides not being passed on to sub confix, scala 2.13 support
 - 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
 - 0.4.2 New toProperties convenience method, transformer interface for java to transform from string to any type.

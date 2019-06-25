@@ -1,17 +1,18 @@
 organization  := "io.sqooba"
-scalaVersion  := "2.13.0-M5"
+scalaVersion  := "2.13.0"
 name          := "sq-conf"
 description   := "Unified configuration interface."
 homepage      := Some(url("https://github.com/Sqooba/sq-conf"))
 licenses      := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
-crossScalaVersions := Seq("2.13.0-M5", "2.12.8", "2.11.12")
+crossScalaVersions := Seq("2.13.0", "2.12.8", "2.11.12")
 
+// scalatest available in 2.13, scala-logging not yet (only 2.13-RC3)
 libraryDependencies ++= Seq(
   "com.typesafe"                %   "config"                  % "1.3.4",
-  "com.typesafe.scala-logging"  %%  "scala-logging"           % "3.9.0",
+  "com.typesafe.scala-logging"  %%  "scala-logging"           % "3.9.2",
   "ch.qos.logback"              %   "logback-classic"         % "1.2.3"             % Test,
-  "org.scalatest"               %%  "scalatest"               % "3.0.7"             % Test,
+  "org.scalatest"               %%  "scalatest"               % "3.0.8"             % Test,
   "org.mockito"                 %   "mockito-all"             % "1.10.19"           % Test
 )
 
