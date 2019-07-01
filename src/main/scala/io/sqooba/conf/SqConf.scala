@@ -207,7 +207,8 @@ class SqConf(fileName: String = null,
     }
 
     val keys = confRoot.root().entrySet().asScala.filter(k => {
-      k.getValue.origin().filename() != null
+      k.getValue.origin().filename() != null ||
+        (k.getValue.origin().resource() != null && k.getValue.origin().resource().endsWith(".conf"))
     }).map(_.getKey)
 
     keys.toSet
