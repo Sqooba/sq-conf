@@ -55,6 +55,7 @@ SqConf also provides a java wrapper that returns java data types.
     val javaWrapper = new SqConf().asJava()
 	
     javaWrapper.getInt("some.testIntValue") // returns java.lang.Integer
+    
     javaWrapper.getString("some.testStringValue") // returns java.lang.String
 ```
 
@@ -65,6 +66,7 @@ object.
     val asProperties: Properties = new SqConf().toProperties()
 	
     val someIntVal = asProperties.getProperty("some.testIntValue").toInt // properties always returns string
+    
     val someStringVal = asProperties.getProperty("some.testStringValue")
 ```
 
@@ -79,6 +81,7 @@ Order of preference defines in which order configuration keys are read. By defau
      OrderOfPreference.CONF_FIlE,
      OrderOfPreference.ENV_VARIABLE,
      OrderOfPreference.VALUE_OVERRIDES)
+     
    val conf = new SqConf().configureOrder(oop)
  ```
  Now order would be reversed in comparison to the default.
@@ -108,7 +111,7 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 - getAvailableKeys, already exists, but requires work
 
 ## Change History
-- 0.5.2 Scala 2.13 support, preliminary 
+- 0.5.2 Scala 2.13 support 
 - 0.5.1 Allow configuring order of preference, bug fix value overrides not being passed on to sub confix, scala 2.13 support
 - 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
 - 0.4.2 New toProperties convenience method, transformer interface for java to transform from string to any type.
