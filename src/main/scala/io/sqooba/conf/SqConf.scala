@@ -199,7 +199,7 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getListOfKeys: Set[String] = {
+  def getListOfKeys(): Set[String] = {
     val confRoot = if (prefix == null) {
       conf
     } else {
@@ -212,6 +212,10 @@ class SqConf(fileName: String = null,
     }).map(_.getKey)
 
     keys.toSet
+  }
+
+  def getListOfKeys(key: String): Set[String] = {
+    this.getSubConfig(key).getListOfKeys()
   }
 
   def configureOrder(order: List[OrderOfPreference]): SqConf =

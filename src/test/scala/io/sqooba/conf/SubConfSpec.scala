@@ -55,4 +55,11 @@ class SubConfSpec extends FlatSpec with Matchers {
 		ssConf.getString("aString") shouldBe "this is a string"
 		ssConf.getInt("aInt") shouldBe 123
 	}
+
+	"sub conf" should "give list of keys for complex items" in {
+		val sConf = conf.getSubConfig("keyConf.sub")
+		val setOfKeys = sConf.getListOfKeys
+		setOfKeys.size shouldBe 2
+		setOfKeys should contain allOf ("complex1", "complex2")
+	}
 }

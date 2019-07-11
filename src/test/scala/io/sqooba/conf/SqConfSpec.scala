@@ -138,12 +138,13 @@ class SqConfSpec extends FlatSpec with Matchers {
 
   "get keys" should "give a list of keys at the root of the conf" in {
     val keys = conf.getListOfKeys
-    keys.size shouldBe 4
-    keys should contain allOf ("simplevalue", "filename", "subConf", "some")
+    keys.size shouldBe 5
+    keys should contain allOf ("simplevalue", "filename", "subConf", "some", "keyConf")
   }
 
-  "test test" should "dur" in {
-    // com.typesafe.config.impl.SimpleConfig.parseDuration("10 s",ConfigOriginFactory.newSimple("source"), "key")
+  "get keys" should "give a list of keys for key" in {
+    val keys = conf.getListOfKeys("subConf")
+    keys.size shouldBe 3
   }
 
   def compare(x: Double, y: Double, precision: Double): Boolean = {

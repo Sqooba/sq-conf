@@ -108,9 +108,10 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 - improve api documentation/ from nonexistent to something
 - yml support
 - test more complex type conversions from app.conf, also with java transformers
-- getAvailableKeys, already exists, but requires work
+
 
 ## Change History
+- 0.5.3 getAvailableKeys redefined and also available for a key 
 - 0.5.2 Scala 2.13 support 
 - 0.5.1 Allow configuring order of preference, bug fix value overrides not being passed on to sub confix, scala 2.13 support
 - 0.5.0 Add get config method to java wrapper, deployed first snapshot to sonatype repo.
