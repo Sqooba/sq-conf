@@ -114,9 +114,15 @@ class SqConfSpec extends FlatSpec with Matchers {
 		prop shouldBe false
 	}
 
-	"get boolean option" should "return None for non existing clean" in {
+	"get boolean option" should "return None for non existing value" in {
 		val prop = conf.getBooleanOption("this.does.not.exist")
 		prop shouldBe None
+	}
+
+	"get boolean option" should "return Some(boolean) for existing value" in {
+		val prop = conf.getBooleanOption("some.testBooleanValue")
+		prop shouldBe defined
+		prop.get shouldBe true
 	}
 
   "another conf with overwrites" should "have a different value" in {
