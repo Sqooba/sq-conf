@@ -6,6 +6,7 @@ import java.util.Properties
 
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
+import scala.util.Try
 
 import com.typesafe.config._
 import com.typesafe.config.impl.DurationParser
@@ -19,7 +20,7 @@ class SqConf(fileName: String = null,
              prefix: String = null,
              valueOverrides: Map[String, String] = Map(), orderOfPreference: List[OrderOfPreference] = SqConf.DEFAULT_ORDER_OF_PREFERENCE) extends LazyLogging {
 
-  def this() = this(null, null, null, null)
+	def this() = this(null, null, null, null)
 
   def asJava() = new JavaSqConf(this)
 
@@ -51,15 +52,35 @@ class SqConf(fileName: String = null,
 
   def getOrderOfPreference: List[OrderOfPreference] = orderOfPreference
 
-  def getInt(key: String): Int = getValueAccordingOrderOfOfPreference[Int](key, x => x.toInt)
+  def getInt(key: String): Int = getValueAccordingOrderOfOfPreference[Int](key, _.toInt)
+
+	def getInt(key: String, default: Int): Int = getValueAsOptionAccordingOrderOfOfPreference[Int](key, _.toInt).getOrElse(default)
+
+	def getIntOption(key: String): Option[Int] = getValueAsOptionAccordingOrderOfOfPreference[Int](key, _.toInt)
 
   def getString(key: String): String = getValueAccordingOrderOfOfPreference[String](key, x => x)
 
-  def getBoolean(key: String): Boolean = getValueAccordingOrderOfOfPreference[Boolean](key, x => x.toBoolean)
+	def getString(key: String, default: String): String = getValueAsOptionAccordingOrderOfOfPreference[String](key, x => x).getOrElse(default)
 
-  def getLong(key: String): Long = getValueAccordingOrderOfOfPreference[Long](key, x => x.toLong)
+	def getStringOption(key: String): Option[String] = getValueAsOptionAccordingOrderOfOfPreference[String](key, x => x)
+
+  def getBoolean(key: String): Boolean = getValueAccordingOrderOfOfPreference[Boolean](key, _.toBoolean)
+
+	def getBoolean(key: String, default: Boolean): Boolean = getValueAsOptionAccordingOrderOfOfPreference[Boolean](key, _.toBoolean).getOrElse(default)
+
+	def getBooleanOption(key: String): Option[Boolean] = getValueAsOptionAccordingOrderOfOfPreference[Boolean](key, _.toBoolean)
+
+  def getLong(key: String): Long = getValueAccordingOrderOfOfPreference[Long](key, _.toLong)
+
+	def getLong(key: String, default: Long): Long = getValueAsOptionAccordingOrderOfOfPreference[Long](key, _.toLong).getOrElse(default)
+
+	def getLongOption(key: String): Option[Long] = getValueAsOptionAccordingOrderOfOfPreference[Long](key, _.toLong)
 
   def getBigInt(key: String): BigInt = getValueAccordingOrderOfOfPreference[BigInt](key, x => BigInt(x))
+
+	def getBigInt(key: String, default: BigInt): BigInt = getValueAsOptionAccordingOrderOfOfPreference[BigInt](key, BigInt(_)).getOrElse(default)
+
+	def getBigIntOption(key: String): Option[BigInt] = getValueAsOptionAccordingOrderOfOfPreference[BigInt](key, BigInt(_))
 
   def getDuration(key: String): Duration = {
     val fullKey = buildKey(key)
@@ -73,6 +94,10 @@ class SqConf(fileName: String = null,
     }
   }
 
+	def getDuration(key: String, default: Duration): Duration = Try(getDuration(key)).getOrElse(default)
+
+	def getDurationOption(key: String): Option[Duration] = Try(getDuration(key)).toOption
+
   def getValueAccordingOrderOfOfPreference[T: ClassTag](key: String, converter: String => T): T = {
     var value: T = null.asInstanceOf[T]
 
@@ -82,6 +107,9 @@ class SqConf(fileName: String = null,
     })
     value
   }
+
+	def getValueAsOptionAccordingOrderOfOfPreference[T: ClassTag](key: String, converter: String => T): Option[T] =
+		Try({getValueAccordingOrderOfOfPreference[T](key, converter)}).toOption
 
   def getListOfValuesAccordingOrderOfPreference[T: ClassTag](key: String, converter: String => T): List[T] = {
     var values: List[T] = List()
@@ -138,6 +166,10 @@ class SqConf(fileName: String = null,
   }
 
   def get[T](key: String): T = conf.getAnyRef(key).asInstanceOf[T]
+
+	def get[T](key: String, default: T): T = getOption[T](key).getOrElse(default)
+
+	def getOption[T](key: String): Option[T] = Try(conf.getAnyRef(key).asInstanceOf[T]).toOption
 
   def keyAsEnv(key: String): String = {
     val asEnvKey = key.toUpperCase.replaceAll("""\.""", "_")
@@ -199,7 +231,7 @@ class SqConf(fileName: String = null,
     }
   }
 
-  def getListOfKeys: Set[String] = {
+  def getListOfKeys(): Set[String] = {
     val confRoot = if (prefix == null) {
       conf
     } else {
@@ -207,10 +239,15 @@ class SqConf(fileName: String = null,
     }
 
     val keys = confRoot.root().entrySet().asScala.filter(k => {
-      k.getValue.origin().filename() != null
+      k.getValue.origin().filename() != null ||
+        (k.getValue.origin().resource() != null && k.getValue.origin().resource().endsWith(".conf"))
     }).map(_.getKey)
 
     keys.toSet
+  }
+
+  def getListOfKeys(key: String): Set[String] = {
+    this.getSubConfig(key).getListOfKeys()
   }
 
   def configureOrder(order: List[OrderOfPreference]): SqConf =

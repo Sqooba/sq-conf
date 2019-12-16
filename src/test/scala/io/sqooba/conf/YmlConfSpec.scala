@@ -5,14 +5,11 @@ import java.io.File
 import com.typesafe.config.{Config, ConfigFactory}
 import org.scalatest.{FlatSpec, Matchers}
 
-class YamlConfSpec extends FlatSpec with Matchers {
+class YmlConfSpec extends FlatSpec with Matchers {
 
 
 	"create config for yml" should "(filename) work like any else" in {
-		val sqConf1 = SqConf.forFilename("another.conf")
 		val sqConf2 = SqConf.forFilename("ymlconf.yml")
-
-		sqConf1.getInt("some.testIntValue") shouldBe 100
 		sqConf2.getInt("invoice") shouldBe 34843
 	}
 
@@ -44,6 +41,9 @@ class YamlConfSpec extends FlatSpec with Matchers {
 		val conf = ConfigFactory.parseFile(f)
 
 		sqConf.getInt("invoice") shouldBe 34843
+		sqConf.getString("date") shouldBe "2001-01-23"
+		sqConf.getString("filename") shouldBe "this is ymlconf.yml"
+ 		// sqConf.getInt("subconf") shouldBe 100
 		conf.getInt("invoice") shouldBe 34843
 	}
 }
