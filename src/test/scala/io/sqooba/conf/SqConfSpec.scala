@@ -14,8 +14,8 @@ class SqConfSpec extends FlatSpec with Matchers {
   val anotherConfWithOverrides: SqConf = SqConf.forFilename("another.conf").withOverrides(overWrite)
 
   "convert conf path" should "uppercase it properly" in {
-    val uppercased = conf.keyAsEnv("some.testIntValue")
-    uppercased shouldBe "SOME_TESTINTVALUE"
+    val upperCased = conf.keyAsEnv("some.testIntValue")
+    upperCased shouldBe "SOME_TESTINTVALUE"
   }
 
   "read int from conf" should "get an int from conf" in {
@@ -32,17 +32,37 @@ class SqConfSpec extends FlatSpec with Matchers {
     prop shouldBe "string thing"
   }
 
-  "read big int from conf" should "get a string from conf" in {
+  "read big int from conf" should "get a BigInt from conf" in {
     val prop = conf.getBigInt("some.testBigIntValue")
     prop shouldBe a [BigInt]
     prop shouldBe BigInt(123456789)
   }
+
+	"read big int as Option from conf" should "get a Option[BigInt] from conf" in {
+		val prop = conf.getBigIntAsOption("some.testBigIntValue")
+		prop shouldBe defined
+		prop.get shouldBe a [BigInt]
+		prop.get shouldBe BigInt(123456789)
+	}
+
+	"read non existing big int as Option from conf" should "get a None from conf" in {
+		val prop = conf.getBigIntAsOption("some.testNonExistentBigIntValue")
+		prop should not be defined
+		prop shouldBe None
+	}
 
   "read long from conf" should "get a long from conf" in {
     val prop = conf.getLong("some.testLong2Value")
     prop shouldBe a [java.lang.Long]
     prop shouldBe 9223372036854775807L
   }
+
+	"read optional long from conf" should "get a long from conf" in {
+		val prop = conf.getLongAsOption("some.testLong2Value")
+		prop shouldBe defined
+		prop.get shouldBe a [java.lang.Long]
+		prop.get shouldBe 9223372036854775807L
+	}
 
   "another conf" should "have value" in {
     val prop = anotherConf.getBoolean("this.has.conf")
