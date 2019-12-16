@@ -56,25 +56,31 @@ class SqConf(fileName: String = null,
 
 	def getInt(key: String, default: Int): Int = getValueAsOptionAccordingOrderOfOfPreference[Int](key, _.toInt).getOrElse(default)
 
+	def getIntOption(key: String): Option[Int] = getValueAsOptionAccordingOrderOfOfPreference[Int](key, _.toInt)
+
   def getString(key: String): String = getValueAccordingOrderOfOfPreference[String](key, x => x)
 
 	def getString(key: String, default: String): String = getValueAsOptionAccordingOrderOfOfPreference[String](key, x => x).getOrElse(default)
+
+	def getStringOption(key: String): Option[String] = getValueAsOptionAccordingOrderOfOfPreference[String](key, x => x)
 
   def getBoolean(key: String): Boolean = getValueAccordingOrderOfOfPreference[Boolean](key, _.toBoolean)
 
 	def getBoolean(key: String, default: Boolean): Boolean = getValueAsOptionAccordingOrderOfOfPreference[Boolean](key, _.toBoolean).getOrElse(default)
 
+	def getBooleanOption(key: String): Option[Boolean] = getValueAsOptionAccordingOrderOfOfPreference[Boolean](key, _.toBoolean)
+
   def getLong(key: String): Long = getValueAccordingOrderOfOfPreference[Long](key, _.toLong)
 
 	def getLong(key: String, default: Long): Long = getValueAsOptionAccordingOrderOfOfPreference[Long](key, _.toLong).getOrElse(default)
 
-	def getLongAsOption(key: String): Option[Long] = getValueAsOptionAccordingOrderOfOfPreference[Long](key, _.toLong)
+	def getLongOption(key: String): Option[Long] = getValueAsOptionAccordingOrderOfOfPreference[Long](key, _.toLong)
 
   def getBigInt(key: String): BigInt = getValueAccordingOrderOfOfPreference[BigInt](key, x => BigInt(x))
 
 	def getBigInt(key: String, default: BigInt): BigInt = getValueAsOptionAccordingOrderOfOfPreference[BigInt](key, BigInt(_)).getOrElse(default)
 
-	def getBigIntAsOption(key: String): Option[BigInt] = getValueAsOptionAccordingOrderOfOfPreference[BigInt](key, BigInt(_))
+	def getBigIntOption(key: String): Option[BigInt] = getValueAsOptionAccordingOrderOfOfPreference[BigInt](key, BigInt(_))
 
   def getDuration(key: String): Duration = {
     val fullKey = buildKey(key)
@@ -89,6 +95,8 @@ class SqConf(fileName: String = null,
   }
 
 	def getDuration(key: String, default: Duration): Duration = Try(getDuration(key)).getOrElse(default)
+
+	def getDurationOption(key: String): Option[Duration] = Try(getDuration(key)).toOption
 
   def getValueAccordingOrderOfOfPreference[T: ClassTag](key: String, converter: String => T): T = {
     var value: T = null.asInstanceOf[T]
@@ -158,6 +166,10 @@ class SqConf(fileName: String = null,
   }
 
   def get[T](key: String): T = conf.getAnyRef(key).asInstanceOf[T]
+
+	def get[T](key: String, default: T): T = getOption[T](key).getOrElse(default)
+
+	def getOption[T](key: String): Option[T] = Try(conf.getAnyRef(key).asInstanceOf[T]).toOption
 
   def keyAsEnv(key: String): String = {
     val asEnvKey = key.toUpperCase.replaceAll("""\.""", "_")
