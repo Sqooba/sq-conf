@@ -32,7 +32,36 @@ class SqConfSpec extends FlatSpec with Matchers {
     prop shouldBe "string thing"
   }
 
-  "read big int from conf" should "get a BigInt from conf" in {
+	"read string option from conf" should "get a string from conf" in {
+		val prop = conf.getStringOption("some.testStringValue")
+		prop shouldBe defined
+		prop.get shouldBe "string thing"
+	}
+
+	"read string from conf" should "return default value if key does not exist" in {
+		val prop = conf.getString("some.not.existing.testStringValue", "defaultString")
+		prop shouldBe "defaultString"
+	}
+
+	//   testIntValue = 187
+	"read int from conf" should "get a int from conf" in {
+		val prop = conf.getInt("some.testIntValue")
+		prop shouldBe 187
+	}
+
+	"read int from conf" should "get default if key does not exist" in {
+		val prop = conf.getInt("some.test.not.there.IntValue", 69)
+		prop shouldBe 69
+	}
+
+	"read int from conf" should "get int option" in {
+		val prop = conf.getIntOption("some.testIntValue")
+		prop shouldBe defined
+		prop.get shouldBe 187
+	}
+
+
+	"read big int from conf" should "get a BigInt from conf" in {
     val prop = conf.getBigInt("some.testBigIntValue")
     prop shouldBe a [BigInt]
     prop shouldBe BigInt(123456789)
@@ -79,6 +108,16 @@ class SqConfSpec extends FlatSpec with Matchers {
     val prop = anotherConf.getBoolean("this.has.conf")
     prop shouldBe true
   }
+
+	"get boolean" should "have value def value" in {
+		val prop = anotherConf.getBoolean("this.does.not.exist", false)
+		prop shouldBe false
+	}
+
+	"get boolean option" should "return None for non existing clean" in {
+		val prop = conf.getBooleanOption("this.does.not.exist")
+		prop shouldBe None
+	}
 
   "another conf with overwrites" should "have a different value" in {
     EnvUtil.removeEnv(conf.keyAsEnv("some.testIntValue"))
