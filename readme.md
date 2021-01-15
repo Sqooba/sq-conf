@@ -108,7 +108,7 @@ Sq-conf works also with maven. Just add this to your pom.xml:
 - improve api documentation from nonexistent to something
 - yml support
 - test more complex type conversions from app.conf, also with java transformers
-
+- support scala versions
 
 ## Change History
 - 0.5.3 getAvailableKeys redefined and also available for a key, getAsOption
